@@ -1,5 +1,13 @@
 @for $i from 0 through 100 {
   $emValue: ($i + 1em) - 1em;
+  $percentValue: ($i + 1%) - 1%;
+  // width height
+  .width-#{i} {
+    width: $percentValue;
+  }
+  .height-#{i} {
+    height: $percentValue;
+  }
   // MARGIN
   .margin-top-#{$i} {
     margin-top: $emValue;
@@ -26,8 +34,27 @@
   .padding-right-#{$i} {
     padding-right: $emValue;
   }
-  $remValue: ($i + 1rem) - 1rem;
+}
+$font10px: 0.625rem;
+$font11px: 0.6875rem;
+$font12px: 0.75rem;
+$font13px: 0.8125rem;
+$font14px: 0.875rem;
+$font15px: 0.9375rem;
+$font16px: 1rem;
+$font20px: 1.25rem;
+$font24px: 1.5rem;
+
+@for $i from 10 through 16 {
+  $value: ($i + 1px) - 1px;
+  $remSize: $value / 16px;
   .font-#{$i} {
-    font-size: $remValue !important;
+    font-size: #{$remSize}rem;
   }
+}
+.font-20 {
+  font-size: $font20px;
+}
+.font-24 {
+  font-size: $font24px;
 }
