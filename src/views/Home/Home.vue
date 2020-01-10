@@ -211,6 +211,7 @@ export default {
   .contacts {
     text-align: center;
     padding: 3em;
+    padding-bottom: 0;
     position: relative;
   }
 }
