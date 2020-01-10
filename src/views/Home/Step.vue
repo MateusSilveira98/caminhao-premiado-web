@@ -3,6 +3,7 @@
     <img :src="getImageUrl(url)" alt="step" />
     <p>{{text}}</p>
     <div class="arrow" v-if="showArrow"></div>
+    <div class="line" v-if="showLine"></div>
   </div>
 </template>
 
@@ -11,7 +12,8 @@ export default {
   props: {
     url: { type: String, default: "" },
     text: { type: String, default: "" },
-    showArrow: { type: Boolean, default: true }
+    showArrow: { type: Boolean, default: false },
+    showLine: { type: Boolean, default: false }
   },
   methods: {
     getImageUrl(url) {
@@ -23,6 +25,14 @@ export default {
 
 <style lang="scss">
 .step {
+  position: relative;
+  .line {
+    position: absolute;
+    top: 2.1em;
+    left: 9em;
+    border-top: 5px dotted #0f66be;
+    width: 16em;
+  }
   .arrow {
     width: 0;
     height: 0;
@@ -32,8 +42,8 @@ export default {
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
     border-left: 15px solid white;
+    z-index: 10;
   }
-  position: relative;
   img {
     z-index: 10;
     position: relative;
@@ -41,18 +51,6 @@ export default {
   p {
     width: 220px;
     font-size: 0.8300920204603125rem;
-  }
-  &:not(:last-child) {
-    p {
-      &::before {
-        content: "";
-        position: absolute;
-        top: 2.5em;
-        left: 9em;
-        border-top: 5px dotted #0f66be;
-        width: 21em;
-      }
-    }
   }
 }
 </style>
