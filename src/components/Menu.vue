@@ -45,6 +45,7 @@ nav.navbar {
   background: #0f66be;
   font-weight: bold;
   padding-bottom: 2em;
+  font-size: 1.25rem;
   a.navbar-item {
     color: white;
     text-transform: uppercase;
@@ -63,8 +64,12 @@ nav.navbar {
       label {
         display: block;
         color: #ffcc38;
-        font-size: 0.75rem;
+        font-size: 0.8300920204603125rem;
         margin: 0;
+        font-weight: normal;
+        &:last-child {
+          margin-bottom: 0.5em;
+        }
       }
       .button {
         margin: 0;
@@ -80,7 +85,7 @@ nav.navbar {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin: 0 3em;
+    margin: 0 1em;
   }
 }
 </style>
