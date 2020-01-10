@@ -1,9 +1,10 @@
 <template>
   <article class="home">
-    <button @click="toggleModal = !toggleModal">Toggle Modal</button>
-    <Modal :showModal="toggleModal" @close="toggleModal = $event">
-      <p>HOME</p>
-    </Modal>
+    <Menu></Menu>
+    <div class="banner">
+      <img src="@/assets/images/banner_home_1.jpg" alt="banner1">
+      <img src="@/assets/images/banner_home_2.jpg" alt="banner2">
+    </div>
   </article>
 </template>
 
@@ -11,18 +12,26 @@
 import { mapActions, mapState } from "vuex";
 import _ from "lodash";
 import Modal from '@/components/Modal.vue';
+import Menu from '@/components/Menu.vue';
 export default {
  components: {
-   Modal
+   Modal,
+   Menu
  },
  data() {
    return {
-     toggleModal: false
    }
  }
 };
 </script>
 
 <style lang='scss' scoped>
-
+.home {
+  .banner {
+    width: 100%;
+    img {
+      width: 50%;
+    }
+  }
+}
 </style>
