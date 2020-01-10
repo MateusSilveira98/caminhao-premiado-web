@@ -51,6 +51,26 @@
         class="font-10 margin-top-1"
       >*O acesso de até 6 meses à plataforma Cresça Play deverá ser realizado até um dia antes do sorteio. Após esse prazo, o passaporte não será válido. Consulte regulamento.</p>
     </div>
+    <div class="contacts">
+      <h1 class="title font-25">Contato</h1>
+      <div class="flex justify-center">
+        <div class="flex align-items-center margin-right-3">
+          <img src="@/assets/images/email_icon.png" alt="email" />
+          <span class="font-15 margin-left-1">contato@crescaplay.com.br</span>
+        </div>
+        <div class="flex align-items-center">
+          <img src="@/assets/images/whatsapp_icon.png" alt="whatsapp" />
+          <span class="font-15 margin-left-1">(11) 99497-3716</span>
+        </div>
+      </div>
+      <p
+        class="font-10 margin-top-3"
+      >Sorteio(s) vinculado à Título de Capitalização, modalidade Incentivo, emitido pela ZURICH BRASIL CAPITALIZAÇÃO S/A., CNPJ 17.266.009/0001-41 e Processo SUSEP n° 15414.901582/2018-96. Período de vigência desta Promoção Comercial: 04/11/2019 a 31/01/2020. A aprovação deste título pela SUSEP não implica, por parte da Autarquia, em incentivo ou recomendação a sua aquisição, representando exclusivamente, sua adequação as normas em vigor. O titular sempre terá direito ao recebimento em dinheiro se assim o desejar. Consulte o Regulamento completo e as Condições Gerais do Título de Capitalização desta Promoção Comercial no site https://www.zurich.com.br/pt-br/empresariais/capitalizacao.</p>
+      <div class="font-10 margin-top-3">
+        <img src="@/assets/images/cresca_play_icon.png" alt="crescalogo" />
+        <p class="margin-top-1">&copy;CRESÇA PLAY 2020 - Todos os direitos reservados</p>
+      </div>
+    </div>
   </article>
 </template>
 
@@ -161,9 +181,6 @@ export default {
     background: #ffcc38;
     padding: 3em;
     padding-bottom: 12em;
-    .title {
-      text-transform: uppercase;
-    }
     .tutorialSteps {
       display: flex;
       justify-content: space-between;
@@ -190,6 +207,11 @@ export default {
       justify-content: center;
       top: -11em;
     }
+  }
+  .contacts {
+    text-align: center;
+    padding: 3em;
+    position: relative;
   }
 }
 </style>
