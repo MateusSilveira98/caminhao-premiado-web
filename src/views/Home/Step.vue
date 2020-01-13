@@ -26,19 +26,20 @@ export default {
 <style lang="scss">
 .step {
   position: relative;
+  width: 100%;
   .line {
     position: absolute;
     top: 2.1em;
-    left: 9em;
     border-top: 5px dotted #0f66be;
-    width: 16em;
+    width: 100%;
+    left: 10em;
   }
   .arrow {
     width: 0;
     height: 0;
     position: absolute;
     top: 1.3em;
-    left: 15em;
+    right: 0;
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
     border-left: 15px solid white;
@@ -49,8 +50,21 @@ export default {
     position: relative;
   }
   p {
-    width: 220px;
     font-size: 0.8300920204603125rem;
+  }
+}
+@media (min-width: 914px) and (max-width: 1519px) {
+  .step {
+    .line {
+      left: 7em;
+    }
+  }
+}
+@media (min-width: 1520px) and (max-width: 1680px) {
+  .step {
+    .line {
+      left: 8em;
+    }
   }
 }
 </style>
