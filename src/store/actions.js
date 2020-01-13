@@ -19,5 +19,8 @@ export default {
   async getById({ commit }, {url, id}) {
     let response = await service.get(`${url}/${id}`);
     commit('GET_BY_ID_SUCCESS', { payload: response.data });
+  },
+  emitSelectedMenuItem({commit}, item) {
+    commit('SET_MENU_ITEM', item);
   }
 }

@@ -21,5 +21,8 @@ export default {
   },
   'GET_BY_ID_SUCCESS'(state, {payload}) {
     state.selected = payload;
+  },
+  'SET_MENU_ITEM'(state, item) {
+    state.menuItem = item;
   }
 }

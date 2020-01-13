@@ -4,5 +4,6 @@ export default {
   message: '',
   messageClass: '',
   selected: {},
-  all: []
+  all: [],
+  menuItem: ''
 }

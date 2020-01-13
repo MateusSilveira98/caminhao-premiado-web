@@ -1,10 +1,10 @@
 <template>
   <article class="home">
-    <div class="banner">
+    <div class="banner" ref="home">
       <img src="@/assets/images/banner_home_1.jpg" alt="banner1" />
       <img src="@/assets/images/banner_home_2.jpg" alt="banner2" />
     </div>
-    <div class="tutorial">
+    <div class="tutorial" ref="tutorial">
       <h1 class="title font-25">Como Participar</h1>
       <p class="font-25 margin-bottom-2">
         Você concorre a R$ 10.000,00 em prêmios e ainda ganha acesso de até 6 meses ao
@@ -50,7 +50,7 @@
         class="font-10 margin-top-1"
       >*O acesso de até 6 meses à plataforma Cresça Play deverá ser realizado até um dia antes do sorteio. Após esse prazo, o passaporte não será válido. Consulte regulamento.</p>
     </div>
-    <div class="contacts">
+    <div class="contacts" ref="contact">
       <h1 class="title font-25">Contato</h1>
       <div class="flex justify-center">
         <div class="flex align-items-center margin-right-3">
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapState } from "vuex";
 import _ from "lodash";
 import Modal from "@/components/Modal.vue";
 import Step from "./Step.vue";
@@ -83,6 +83,12 @@ export default {
   components: {
     Modal,
     Step
+  },
+  computed: { ...mapState(["menuItem"]) },
+  watch: {
+    menuItem(value) {
+      this.goToItem(value);
+    }
   },
   data() {
     return {
@@ -159,6 +165,14 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    goToItem(item) {
+      let element = this.$refs[item];
+      let top = element.offsetTop;
+      window.scroll({behavior: 'smooth'});
+      window.scrollTo(0, top);
+    }
   }
 };
 </script>

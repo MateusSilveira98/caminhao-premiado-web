@@ -1,11 +1,15 @@
 @import "~bulma/bulma";
 @import "~animate.css/animate.css";
-@import './assets/fonts/uoltext/stylesheet.css';
-@import './styles/index.scss';
+@import "./assets/fonts/uoltext/stylesheet.css";
+@import "./styles/index.scss";
 
 * {
   margin: 0;
   padding: 0;
   text-decoration: none;
   font-family: "uoltxt";
+}
+
+html {
+  scroll-behavior: smooth;
 }

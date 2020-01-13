@@ -12,23 +12,23 @@
     </div>
     <div id="menu" class="navbar-menu">
       <div class="navbar-start-items">
-        <a class="navbar-item">Página Inicial</a>
-        <a class="navbar-item">Como Participar</a>
-        <a class="navbar-item">Regulamento</a>
-        <a class="navbar-item">Contato</a>
+        <a class="navbar-item" @click="selectMenu('home')">Página Inicial</a>
+        <a class="navbar-item" @click="selectMenu('tutorial')">Como Participar</a>
+        <a class="navbar-item" @click="selectMenu('rules')">Regulamento</a>
+        <a class="navbar-item" @click="selectMenu('contact')">Contato</a>
       </div>
       <div class="navbar-end-items">
         <div class="navbar-item">
           <div class="button-labeled">
             <label>Primeiro Acesso</label>
-            <a class="button is-yellow">Cadastrar Passaporte</a>
+            <a class="button is-yellow" @click="selectMenu('register')">Cadastrar Passaporte</a>
           </div>
         </div>
         <div class="navbar-item">
           <div class="button-labeled">
             <label>Já tenho cadastro</label>
             <label>ou cadastrar novo passaporte</label>
-            <a class="button is-yellow">Entrar</a>
+            <a class="button is-yellow" @click="selectMenu('login')">Entrar</a>
           </div>
         </div>
       </div>
@@ -37,7 +37,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    selectMenu(item) {
+      this.$emit('selected', item);
+    }
+  }
+};
 </script>
 
 <style lang="scss">
