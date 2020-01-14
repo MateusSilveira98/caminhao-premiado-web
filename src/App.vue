@@ -16,7 +16,7 @@
 import Loading from "@/components/Loading";
 import Notification from "@/components/Notification";
 import Menu from "@/components/Menu.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 export default {
   components: {
     Loading,
@@ -24,8 +24,7 @@ export default {
     Notification
   },
   computed: {
-    ...mapState(["loading", "messageClass", "message", "toNotify"]),
-    ...mapActions(['emitSelectedMenuItem'])
+    ...mapState(["loading", "messageClass", "message", "toNotify"])
   },
   watch: {
     toNotify(newValue) {
@@ -39,7 +38,7 @@ export default {
   },
   methods: {
     verifySelectedItem(item) {
-      if (item !== "login") this.$store.dispatch("emitSelectedMenuItem", item);
+      if (item !== "login") this.$store.dispatch("setSelectedMenuItem", item);
       else window.location.href = "#";
     }
   }

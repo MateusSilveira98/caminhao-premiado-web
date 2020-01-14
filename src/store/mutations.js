@@ -16,11 +16,8 @@ export default {
     state.message = typeof response.message == 'object' ? JSON.stringify(response.message) : response.message;
     state.messageClass = 'danger';
   },
-  'GET_ALL_SUCCESS'(state, {payload}) {
+  'GET_SUCCESS'(state, {payload}) {
     state.all = payload;
-  },
-  'GET_BY_ID_SUCCESS'(state, {payload}) {
-    state.selected = payload;
   },
   'SET_MENU_ITEM'(state, item) {
     state.menuItem = item;

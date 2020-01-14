@@ -57,9 +57,12 @@
           <img src="@/assets/images/email_icon.png" alt="email" />
           <span class="font-15 margin-left-1">contato@crescaplay.com.br</span>
         </div>
-        <div class="flex align-items-center">
+        <div class="flex align-items-center font-15">
           <img src="@/assets/images/whatsapp_icon.png" alt="whatsapp" />
-          <span class="font-15 margin-left-1">(11) 99497-3716</span>
+          <div class="has-text-left margin-left-1">
+            <span>(11) 99497-3716</span>
+            <p>Atendimento de segunda à sexta das 10h às 17h.</p>
+          </div>
         </div>
       </div>
       <p
@@ -70,6 +73,307 @@
         <p class="margin-top-1">&copy;CRESÇA PLAY 2020 - Todos os direitos reservados</p>
       </div>
     </div>
+    <Modal :showModal="showModal" @close="handleModal()">
+      <section class="passaport" v-if="showPassports">
+        <header class="flex justify-between">
+          <span class="title">Passaporte</span>
+          <a @click="handleModal()">
+            <i class="fa fa-times font-25"></i>
+          </a>
+        </header>
+        <label class="label">Adicione o(os) número(s) do seu(s) passaporte(s)</label>
+        <div class="field has-addons" v-for="input in inputs" :key="input.id">
+          <p class="control is-expanded">
+            <input class="input" v-model="input.value" type="text" placeholder="00000000" />
+          </p>
+          <p class="control" v-if="inputs.length > 1 || input.value">
+            <a class="button is-danger" @click="removeInputField(input)">
+              <i class="fa fa-trash"></i>
+            </a>
+          </p>
+        </div>
+        <a
+          class="button is-fullwidth"
+          @click="addInputField()"
+          v-if="inputs.length < 5"
+        >Adicionar mais um passaporte</a>
+        <p class="font-10 margin-top-4 margin-bottom-4">
+          Caso já tenha feito o cadastro e deseja cadastrar mais códigos para concorrer a promoção,
+          <a>acesse a plataforma com seu CPF</a> e senha cadastrados e siga as instruções
+        </p>
+        <footer>
+          <a class="button is-info is-fullwidth" @click="savePassport(inputs)">Confirmar</a>
+        </footer>
+      </section>
+      <section class="user-form" v-if="showUserForm">
+        <header class="flex justify-between aling-items-center margin-bottom-1">
+          <div class="flex align-item-center">
+            <a class="margin-right-1 font-20" @click="showPassports = true; showUserForm = false;">
+              <i class="fa fa-arrow-left"></i>
+            </a>
+            <span class="title">Adicionar seus dados</span>
+          </div>
+          <a class="font-25" @click="handleModal()">
+            <i class="fa fa-times"></i>
+          </a>
+        </header>
+        <div class="field">
+          <p class="control">
+            <label class="label">Nome</label>
+            <input class="input" v-model="user.name" type="text" placeholder="Fulano de tal" />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Email</label>
+            <input class="input" v-model="user.email" type="email" placeholder="exemplo@ex.com" />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">CPF</label>
+            <input class="input" v-model="user.cpf" type="text" placeholder="000.000.000-00" />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Celular/Telefone</label>
+            <input
+              class="input"
+              v-model="user.phone"
+              type="text"
+              placeholder="00900000000 ou 0000000000"
+            />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Data de nascimento</label>
+            <input class="input" v-model="user.date" type="date" placeholder="dd/mm/yyyy" />
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">Sexo</label>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="gender" value="masculino" v-model="user.gender" />
+              masculino
+            </label>
+            <label class="radio">
+              <input type="radio" name="gender" value="feminino" v-model="user.gender" />
+              feminino
+            </label>
+            <label class="radio">
+              <input type="radio" name="gender" value="outro" v-model="user.gender" />
+              prefiro não informar
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Estado e cidade</label>
+          <div class="columns">
+            <div class="column">
+              <div class="select is-fullwidth">
+                <select
+                  class="is-fullwidth"
+                  v-model="user.state"
+                  @change="getCitiesByState(user.state)"
+                >
+                  <option selected disabled>Selecione seu estado</option>
+                  <option
+                    v-for="state in states"
+                    :key="state.id"
+                    :value="state"
+                  >{{state.sigla}} - {{state.nome}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="column">
+              <div class="select is-fullwidth">
+                <select class="is-fullwidth" v-model="user.city">
+                  <option selected disabled>Selecione sua cidade</option>
+                  <option v-for="city in cities" :key="city.id" :value="city.nome">{{city.nome}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer>
+          <a class="button is-info is-fullwidth" @click="saveUser()">Confirmar</a>
+        </footer>
+      </section>
+      <section class="password" v-if="showPassword">
+        <header class="flex justify-between aling-items-center margin-bottom-1">
+          <div class="flex align-item-center">
+            <a class="margin-right-1 font-20" @click="showUserForm = true; showPassword = false;">
+              <i class="fa fa-arrow-left"></i>
+            </a>
+            <span class="title">Senha de acesso a plataforma</span>
+          </div>
+          <a class="font-25" @click="handleModal()">
+            <i class="fa fa-times"></i>
+          </a>
+        </header>
+        <div class="field">
+          <p class="control">
+            <label class="label">Senha</label>
+            <input
+              class="input"
+              v-model="user.password"
+              type="password"
+              minlength="8"
+              placeholder="crie uma senha com o mínimo de 8 caractéres"
+            />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Confirmar senha</label>
+            <input
+              class="input"
+              v-model="user.confirmPassword"
+              type="password"
+              minlength="8"
+              placeholder="confirme sua senha"
+            />
+          </p>
+        </div>
+        <footer>
+          <a class="button is-info is-fullwidth" @click="savePassword()">Salvar</a>
+        </footer>
+      </section>
+      <section class="confirm-datas" v-if="showConfirmDatas">
+        <header class="flex justify-between aling-items-center margin-bottom-1">
+          <div class="flex align-item-center">
+            <a
+              class="margin-right-1 font-20"
+              @click="showPassword = true; showConfirmDatas = false;"
+            >
+              <i class="fa fa-arrow-left"></i>
+            </a>
+            <span class="title">Confime seus dados</span>
+          </div>
+          <a class="font-25" @click="handleModal()">
+            <i class="fa fa-times"></i>
+          </a>
+        </header>
+        <div class="field">
+          <div class="control">
+            <label class="label">Seus passaportes</label>
+            <div class="select is-fullwidth">
+              <select class="is-fullwidth">
+                <option selected disabled>veja seus passaportes</option>
+                <option v-for="passport in user.passports" :key="passport.id">{{passport.value}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Nome</label>
+            <input class="input" v-model="user.name" type="text" placeholder="Fulano de tal" />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Email</label>
+            <input class="input" v-model="user.email" type="email" placeholder="exemplo@ex.com" />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">CPF</label>
+            <input class="input" v-model="user.cpf" type="text" placeholder="000.000.000-00" />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Celular/Telefone</label>
+            <input
+              class="input"
+              v-model="user.phone"
+              type="text"
+              placeholder="00900000000 ou 0000000000"
+            />
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">Data de nascimento</label>
+            <input class="input" v-model="user.date" type="date" placeholder="dd/mm/yyyy" />
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">Sexo</label>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="gender" value="masculino" v-model="user.gender" />
+              masculino
+            </label>
+            <label class="radio">
+              <input type="radio" name="gender" value="feminino" v-model="user.gender" />
+              feminino
+            </label>
+            <label class="radio">
+              <input type="radio" name="gender" value="outro" v-model="user.gender" />
+              prefiro não informar
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Estado e cidade</label>
+          <div class="columns">
+            <div class="column">
+              <div class="select is-fullwidth">
+                <select
+                  class="is-fullwidth"
+                  v-model="user.state"
+                  @change="getCitiesByState(user.state)"
+                >
+                  <option selected disabled>Selecione seu estado</option>
+                  <option
+                    v-for="state in states"
+                    :key="state.id"
+                    :value="state"
+                  >{{state.sigla}} - {{state.nome}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="column">
+              <div class="select is-fullwidth">
+                <select class="is-fullwidth" v-model="user.city">
+                  <option selected disabled>Selecione sua cidade</option>
+                  <option v-for="city in cities" :key="city.id" :value="city.nome">{{city.nome}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer>
+          <a class="button is-info is-fullwidth" @click="confirm()">Salvar</a>
+        </footer>
+      </section>
+      <section class="random-number" v-if="showNumber">
+        <header class="margin-bottom-1">
+          <span class="title">Parabéns</span>
+        </header>
+        <div class="field">
+          <strong>Sua participação no sorteio está confirmada e seu acesso a plataforma Cresça Play está liberado :)</strong>
+        </div>
+        <div class="field">
+          <strong>Agora aproveite e dê um play no seu conhecimento</strong>
+        </div>
+        <div class="field">
+          <strong>Veja seu(s) número(s) da sorte</strong>
+        </div>
+        <div class="field" v-for="number in user.numbers" :key="number">
+          <strong>{{number}}</strong>
+        </div>
+        <footer>
+          <a class="button is-info is-fullwidth" @click="handleModal()">Acesse o Cresça Play</a>
+        </footer>
+      </section>
+    </Modal>
   </article>
 </template>
 
@@ -78,20 +382,39 @@ import { mapState } from "vuex";
 import _ from "lodash";
 import Modal from "@/components/Modal.vue";
 import Step from "./Step.vue";
+import services from "@/store/services";
 let mockId = 1;
 export default {
   components: {
     Modal,
     Step
   },
-  computed: { ...mapState(["menuItem"]) },
+  computed: {
+    ...mapState(["menuItem"])
+  },
   watch: {
     menuItem(value) {
-      this.goToItem(value);
+      if (value !== "register") this.goToItem(value);
+      else this.handleModal();
     }
   },
   data() {
     return {
+      showModal: false,
+      showPassports: true,
+      showUserForm: false,
+      showPassword: false,
+      showConfirmDatas: false,
+      showNumber: false,
+      states: [],
+      cities: [],
+      inputs: [
+        {
+          id: mockId++,
+          value: ""
+        }
+      ],
+      user: {},
       tutorialSteps: [
         {
           id: mockId++,
@@ -168,11 +491,58 @@ export default {
   },
   methods: {
     goToItem(item) {
-      let element = this.$refs[item];
-      let top = element.offsetTop;
-      window.scroll({behavior: 'smooth'});
-      window.scrollTo(0, top);
+      if (item) {
+        let element = this.$refs[item];
+        let top = element.offsetTop;
+        window.scroll({ behavior: "smooth" });
+        window.scrollTo(0, top);
+      }
+    },
+    handleModal() {
+      this.showModal = !this.showModal;
+      this.$store.dispatch("setSelectedMenuItem", "");
+    },
+    addInputField() {
+      if (this.inputs.length < 5) this.inputs.push({ id: mockId++, value: "" });
+    },
+    removeInputField(input) {
+      if (this.inputs.length > 1)
+        this.inputs.splice(this.inputs.indexOf(input), 1);
+      else this.inputs[0].value = "";
+    },
+    savePassport(inputs) {
+      this.user.passports = inputs;
+      this.user.numbers = [];
+      for (let index = 0; index < this.user.passports.length; index++) {
+        this.user.numbers.push(Math.floor(Math.random() * 1000));
+      }
+      this.showUserForm = true;
+      this.showPassports = false;
+    },
+    saveUser() {
+      this.showUserForm = false;
+      this.showPassword = true;
+    },
+    savePassword() {
+      this.showPassword = false;
+      this.showConfirmDatas = true;
+    },
+    confirm() {
+      this.showConfirmDatas = false;
+      this.showNumber = true;
+    },
+    async getCitiesByState(state) {
+      let response = await services.get(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state.id}/distritos`
+      );
+      this.cities = response.data;
     }
+  },
+  async mounted() {
+    let response = await services.get(
+      "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+    );
+    this.states = response.data;
   }
 };
 </script>
