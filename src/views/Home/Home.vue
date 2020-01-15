@@ -622,6 +622,13 @@ export default {
         display: block;
       }
     }
+    .contacts {
+      padding: 1em;
+      position: relative;
+      .column {
+        justify-content: flex-start;
+      }
+    }
   }
 }
 </style>
