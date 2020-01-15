@@ -137,7 +137,7 @@ nav.navbar {
     margin: 0 1em;
   }
 }
-@media (min-width: 360px) and (max-width: 800px) {
+@media (min-width: 320px) and (max-width: 800px) {
   nav.navbar {
     padding-bottom: 0;
     a.navbar-item {

@@ -598,9 +598,30 @@ export default {
     position: relative;
   }
 }
-@media (min-width: 360px) and (max-width: 800px) {
+@media (min-width: 320px) and (max-width: 800px) {
   .home {
     top: 3em;
+    .tutorial {
+      padding: 1em;
+      padding-bottom: 5em;
+      .tutorialSteps {
+        display: block;
+      }
+    }
+    .informations {
+      padding: 1em;
+      padding-top: 5em;
+      .informationsSteps {
+        display: block;
+      }
+      .logo {
+        width: 90%;
+        top: -4em;
+      }
+      .tutorialSteps {
+        display: block;
+      }
+    }
   }
 }
 </style>
