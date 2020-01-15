@@ -603,20 +603,19 @@ export default {
     top: 3em;
     .tutorial {
       padding: 1em;
-      padding-bottom: 5em;
+      padding-bottom: 2em;
       .tutorialSteps {
         display: block;
       }
     }
     .informations {
       padding: 1em;
-      padding-top: 5em;
+      padding-top: 2em;
       .informationsSteps {
         display: block;
       }
       .logo {
-        width: 90%;
-        top: -4em;
+        display: none;
       }
       .tutorialSteps {
         display: block;
