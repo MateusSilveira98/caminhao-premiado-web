@@ -1,13 +1,5 @@
 @for $i from 0 through 100 {
   $emValue: ($i + 1em) - 1em;
-  $percentValue: ($i + 1%) - 1%;
-  // width height
-  .width-#{i} {
-    width: $percentValue;
-  }
-  .height-#{i} {
-    height: $percentValue;
-  }
   // MARGIN
   .margin-top-#{$i} {
     margin-top: $emValue;

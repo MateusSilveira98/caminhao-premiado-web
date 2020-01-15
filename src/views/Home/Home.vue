@@ -52,12 +52,12 @@
     </div>
     <div class="contacts" ref="contact">
       <h1 class="title font-25">Contato</h1>
-      <div class="flex justify-center">
-        <div class="flex align-items-center margin-right-3">
+      <div class="columns">
+        <div class="column flex align-items-center justify-end">
           <img src="@/assets/images/email_icon.png" alt="email" />
           <span class="font-15 margin-left-1">contato@crescaplay.com.br</span>
         </div>
-        <div class="flex align-items-center font-15">
+        <div class="column flex align-items-center justify-start">
           <img src="@/assets/images/whatsapp_icon.png" alt="whatsapp" />
           <div class="has-text-left margin-left-1">
             <span>(11) 99497-3716</span>
@@ -549,6 +549,8 @@ export default {
 
 <style lang='scss' scoped>
 .home {
+  position: relative;
+  top: 8em;
   .banner {
     width: 100%;
     background: #ffcc38;
@@ -594,6 +596,11 @@ export default {
     padding: 3em;
     padding-bottom: 0;
     position: relative;
+  }
+}
+@media (min-width: 360px) and (max-width: 800px) {
+  .home {
+    top: 3em;
   }
 }
 </style>

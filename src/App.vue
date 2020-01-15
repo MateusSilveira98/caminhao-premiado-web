@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <div>
     <Loading :showLoading="loading"></Loading>
     <Notification
       @close="showNotification = $event"
@@ -10,7 +10,7 @@
     ></Notification>
     <Menu @selected="verifySelectedItem"></Menu>
     <router-view />
-  </article>
+  </div>
 </template>
 <script>
 import Loading from "@/components/Loading";
