@@ -5,7 +5,7 @@
       @close="showNotification = $event"
       :open="showNotification"
       :type="messageClass"
-      :duration="2500"
+      :duration="5000"
       :message="message"
     ></Notification>
     <Menu @selected="verifySelectedItem"></Menu>
@@ -28,7 +28,10 @@ export default {
   },
   watch: {
     toNotify(newValue) {
-      this.showNotification = !newValue;
+      this.showNotification = newValue;
+    },
+    showNotification(newValue) {
+      this.$store.state.toNotify = newValue;
     }
   },
   data() {

@@ -49,7 +49,16 @@ export default {
 .notification {
   position: fixed;
   z-index: 99;
-  right: 0;
-  top: 10px;
+  top: 4em;
+  right: 0em;
+  left: 0em;
+  margin: 0 auto;
+  width: 50%;
+}
+@media (min-width: 320px) and (max-width: 913px) {
+  .notification {
+    top: 0;
+    width: 100%;
+  }
 }
 </style>

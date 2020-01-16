@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar is-transparent">
     <div class="navbar-brand">
-      <a class="navbar-item">
+      <a class="navbar-item" @click="selectMenu('home'); isBurgerActive = !isBurgerActive">
         <img src="@/assets/images/logo_dujuca.png" alt="logo" />
       </a>
       <div
@@ -83,15 +83,6 @@ nav.navbar {
   position: fixed;
   width: 100%;
   top: 0;
-  .navbar-menu.is-active {
-    background: #0f66be;
-    .navbar-start-items,
-    .navbar-end-items {
-      display: block;
-      width: 100%;
-      margin: 0;
-    }
-  }
   .navbar-burger.burger {
     color: white;
   }
@@ -137,9 +128,18 @@ nav.navbar {
     margin: 0 1em;
   }
 }
-@media (min-width: 320px) and (max-width: 800px) {
+@media (min-width: 320px) and (max-width: 913px) {
   nav.navbar {
     padding-bottom: 0;
+    .navbar-menu.is-active {
+      background: #0f66be;
+      .navbar-start-items,
+      .navbar-end-items {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+    }
     a.navbar-item {
       margin-top: 0;
       &:hover {

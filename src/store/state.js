@@ -3,7 +3,5 @@ export default {
   toNotify: false,
   message: '',
   messageClass: '',
-  selected: {},
-  all: [],
   menuItem: ''
 }

@@ -83,9 +83,16 @@
         </header>
         <label class="label">Adicione o(os) número(s) do seu(s) passaporte(s)</label>
         <div class="field has-addons" v-for="input in inputs" :key="input.id">
-          <p class="control is-expanded">
-            <input class="input" v-model="input.value" type="text" placeholder="00000000" />
-          </p>
+          <div class="control is-expanded">
+            <input
+              class="input"
+              v-model="input.value"
+              type="text"
+              placeholder="00000000"
+              v-bind:class="{'is-danger': checkForm('passaporte', input.value, 'required') !== '' }"
+            />
+            <span class="has-text-danger">{{checkForm('passaporte', input.value, 'required')}}</span>
+          </div>
           <p class="control" v-if="inputs.length > 1 || input.value">
             <a class="button is-danger" @click="removeInputField(input)">
               <i class="fa fa-trash"></i>
@@ -102,7 +109,7 @@
           <a>acesse a plataforma com seu CPF</a> e senha cadastrados e siga as instruções
         </p>
         <footer>
-          <a class="button is-info is-fullwidth" @click="savePassport(inputs)">Confirmar</a>
+          <a class="button is-fullwidth is-info" @click="savePassport(inputs)">Confirmar</a>
         </footer>
       </section>
       <section class="user-form" v-if="showUserForm">
@@ -120,52 +127,86 @@
         <div class="field">
           <p class="control">
             <label class="label">Nome</label>
-            <input class="input" v-model="user.name" type="text" placeholder="Fulano de tal" />
+            <input
+              class="input"
+              v-model="user.name"
+              type="text"
+              placeholder="Fulano de tal"
+              v-bind:class="{'is-danger': checkForm('nome', user.name, 'required') !== '' }"
+            />
+            <span class="has-text-danger">{{checkForm('nome', user.name, 'required')}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
             <label class="label">Email</label>
-            <input class="input" v-model="user.email" type="email" placeholder="exemplo@ex.com" />
+            <input
+              class="input"
+              v-model="user.email"
+              type="email"
+              placeholder="exemplo@ex.com"
+              v-bind:class="{'is-danger': checkForm('email', user.email, 'email') !== '' }"
+            />
+            <span class="has-text-danger">{{checkForm('email', user.email, 'email')}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
             <label class="label">CPF</label>
-            <input class="input" v-model="user.cpf" type="text" placeholder="000.000.000-00" />
+            <TheMask
+              :mask="['###.###.###-##']"
+              type="tel"
+              v-model="user.cpf"
+              placeholder="000.000.000-00"
+              class="input"
+              v-bind:class="{'is-danger': checkForm('CPF', user.cpf, 'required') !== '' }"
+            />
+            <span class="has-text-danger">{{checkForm('CPF', user.cpf, 'required')}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
             <label class="label">Celular/Telefone</label>
-            <input
-              class="input"
+            <TheMask
+              :mask="['(##) ####-####', '(##) #####-####']"
+              type="tel"
               v-model="user.phone"
-              type="text"
-              placeholder="00900000000 ou 0000000000"
+              placeholder="(00) 9 0000-0000 ou (00) 0000-0000"
+              class="input"
+              v-bind:class="{'is-danger': checkForm('celular ou telefone', user.phone, 'required') !== '' }"
             />
+            <span
+              class="has-text-danger"
+            >{{checkForm('celular ou telefone', user.phone, 'required')}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
             <label class="label">Data de nascimento</label>
-            <input class="input" v-model="user.date" type="date" placeholder="dd/mm/yyyy" />
+            <input
+              class="input"
+              v-model="user.date"
+              type="date"
+              placeholder="dd/mm/yyyy"
+              v-bind:class="{'is-danger': checkForm('data', user.date, 'required') !== '' }"
+            />
+            <span class="has-text-danger">{{checkForm('data', user.date, 'required')}}</span>
           </p>
         </div>
         <div class="field">
           <label class="label">Sexo</label>
-          <div class="control">
-            <label class="radio">
+          <div class="control flex align-items-center justify-between">
+            <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="masculino" v-model="user.gender" />
-              masculino
+              <span class="margin-left-1">masculino</span>
             </label>
-            <label class="radio">
+            <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="feminino" v-model="user.gender" />
-              feminino
+              <span class="margin-left-1">feminino</span>
             </label>
-            <label class="radio">
+            <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="outro" v-model="user.gender" />
-              prefiro não informar
+              <span class="margin-left-1">prefiro não informar</span>
             </label>
           </div>
         </div>
@@ -178,6 +219,7 @@
                   class="is-fullwidth"
                   v-model="user.state"
                   @change="getCitiesByState(user.state)"
+                  v-bind:class="{'is-danger': checkForm('estado', user.state, 'required') !== '' }"
                 >
                   <option selected disabled>Selecione seu estado</option>
                   <option
@@ -187,18 +229,24 @@
                   >{{state.sigla}} - {{state.nome}}</option>
                 </select>
               </div>
+              <span class="has-text-danger">{{checkForm('estado', user.state, 'required')}}</span>
             </div>
             <div class="column">
               <div class="select is-fullwidth">
-                <select class="is-fullwidth" v-model="user.city">
+                <select
+                  class="is-fullwidth"
+                  v-model="user.city"
+                  v-bind:class="{'is-danger': checkForm('cidade', user.city, 'required') !== '' }"
+                >
                   <option selected disabled>Selecione sua cidade</option>
                   <option v-for="city in cities" :key="city.id" :value="city.nome">{{city.nome}}</option>
                 </select>
               </div>
+              <span class="has-text-danger">{{checkForm('cidade', user.city, 'required')}}</span>
             </div>
           </div>
         </div>
-        <footer>
+        <footer class="field">
           <a class="button is-info is-fullwidth" @click="saveUser()">Confirmar</a>
         </footer>
       </section>
@@ -223,7 +271,11 @@
               type="password"
               minlength="8"
               placeholder="crie uma senha com o mínimo de 8 caractéres"
+              v-bind:class="{'is-danger': checkForm('senha', {value: user.password, qtd: 8}, 'length') !== '' }"
             />
+            <span
+              class="has-text-danger"
+            >{{checkForm('senha', {value: user.password, qtd: 8}, 'length')}}</span>
           </p>
         </div>
         <div class="field">
@@ -235,7 +287,11 @@
               type="password"
               minlength="8"
               placeholder="confirme sua senha"
+              v-bind:class="{'is-danger': checkForm('confirme sua senha', {value: user.confirmPassword, qtd: 8}, 'length') !== '' }"
             />
+            <span
+              class="has-text-danger"
+            >{{checkForm('confirme sua senha', {value: user.confirmPassword, qtd: 8}, 'length')}}</span>
           </p>
         </div>
         <footer>
@@ -283,17 +339,24 @@
         <div class="field">
           <p class="control">
             <label class="label">CPF</label>
-            <input class="input" v-model="user.cpf" type="text" placeholder="000.000.000-00" />
+            <TheMask
+              :mask="['###.###.###-##']"
+              type="tel"
+              v-model="user.cpf"
+              placeholder="000.000.000-00"
+              class="input"
+            />
           </p>
         </div>
         <div class="field">
           <p class="control">
             <label class="label">Celular/Telefone</label>
-            <input
-              class="input"
+            <TheMask
+              :mask="['(##) ####-####', '(##) #####-####']"
+              type="tel"
               v-model="user.phone"
-              type="text"
-              placeholder="00900000000 ou 0000000000"
+              placeholder="(00) 9 0000-0000 ou (00) 0000-0000"
+              class="input"
             />
           </p>
         </div>
@@ -305,18 +368,18 @@
         </div>
         <div class="field">
           <label class="label">Sexo</label>
-          <div class="control">
-            <label class="radio">
+          <div class="control flex align-items-center justify-between">
+            <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="masculino" v-model="user.gender" />
-              masculino
+              <span class="margin-left-1">masculino</span>
             </label>
-            <label class="radio">
+            <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="feminino" v-model="user.gender" />
-              feminino
+              <span class="margin-left-1">feminino</span>
             </label>
-            <label class="radio">
+            <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="outro" v-model="user.gender" />
-              prefiro não informar
+              <span class="margin-left-1">prefiro não informar</span>
             </label>
           </div>
         </div>
@@ -383,11 +446,14 @@ import _ from "lodash";
 import Modal from "@/components/Modal.vue";
 import Step from "./Step.vue";
 import services from "@/store/services";
+import { TheMask } from "vue-the-mask";
+import { formValidator } from "@/utils";
 let mockId = 1;
 export default {
   components: {
     Modal,
-    Step
+    Step,
+    TheMask
   },
   computed: {
     ...mapState(["menuItem"])
@@ -414,7 +480,18 @@ export default {
           value: ""
         }
       ],
-      user: {},
+      user: {
+        gender: "outro",
+        name: null,
+        email: null,
+        cpf: null,
+        phone: null,
+        date: null,
+        state: null,
+        city: null,
+        password: null,
+        confirmPassword: null
+      },
       tutorialSteps: [
         {
           id: mockId++,
@@ -510,22 +587,67 @@ export default {
         this.inputs.splice(this.inputs.indexOf(input), 1);
       else this.inputs[0].value = "";
     },
+    checkForm(fieldName, value, rule) {
+      let validateCallback = formValidator(fieldName, value, rule);
+      return validateCallback !== "isValid" ? validateCallback : "";
+    },
     savePassport(inputs) {
-      this.user.passports = inputs;
-      this.user.numbers = [];
-      for (let index = 0; index < this.user.passports.length; index++) {
-        this.user.numbers.push(Math.floor(Math.random() * 1000));
+      let isValidArray = [];
+      for (let index = 0; index < inputs.length; index++) {
+        const { value } = inputs[index];
+        isValidArray.push(
+          formValidator("passaporte", value, "required") === "isValid"
+        );
       }
-      this.showUserForm = true;
-      this.showPassports = false;
+      if (isValidArray.filter(value => !value).length === 0) {
+        this.user.passports = inputs;
+        this.user.numbers = [];
+        for (let index = 0; index < this.user.passports.length; index++) {
+          this.user.numbers.push(Math.floor(Math.random() * 1000));
+        }
+        this.showUserForm = true;
+        this.showPassports = false;
+      }
     },
     saveUser() {
-      this.showUserForm = false;
-      this.showPassword = true;
+      let isValidArray = [];
+      Object.keys(this.user).forEach(prop => {
+        if (
+          prop !== "passports" &&
+          prop !== "numbers" &&
+          prop !== "password" &&
+          prop !== "confirmPassword"
+        ) {
+          isValidArray.push(
+            formValidator(prop, this.user[prop], "required") === "isValid"
+          );
+        }
+      });
+      if (isValidArray.filter(value => !value).length === 0) {
+        this.showUserForm = false;
+        this.showPassword = true;
+      }
     },
     savePassword() {
-      this.showPassword = false;
-      this.showConfirmDatas = true;
+      let isValidArray = [];
+      Object.keys(this.user).forEach(prop => {
+        if (prop === "password" || prop === "confirmPassword") {
+          isValidArray.push(
+            formValidator(prop, this.user[prop], "required") === "isValid"
+          );
+        }
+      });
+      if (isValidArray.filter(value => !value).length === 0) {
+        if (this.user.password === this.user.confirmPassword) {
+          this.showPassword = false;
+          this.showConfirmDatas = true;
+        } else {
+          this.$store.dispatch("pushNotification", {
+            message: "As senhas não se correspondem".toUpperCase(),
+            messageClass: "danger"
+          });
+        }
+      }
     },
     confirm() {
       this.showConfirmDatas = false;
@@ -533,16 +655,16 @@ export default {
     },
     async getCitiesByState(state) {
       let response = await services.get(
-        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state.id}/distritos`
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state.id}/municipios`
       );
-      this.cities = response.data;
+      this.cities = _.orderBy(response.data, "nome");
     }
   },
   async mounted() {
     let response = await services.get(
       "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
     );
-    this.states = response.data;
+    this.states = _.orderBy(response.data, "nome");
   }
 };
 </script>
@@ -598,7 +720,7 @@ export default {
     position: relative;
   }
 }
-@media (min-width: 320px) and (max-width: 800px) {
+@media (min-width: 320px) and (max-width: 913px) {
   .home {
     top: 3em;
     .tutorial {
@@ -611,6 +733,11 @@ export default {
     .informations {
       padding: 1em;
       padding-top: 2em;
+      p {
+        margin-top: 0;
+        margin-bottom: 0;
+        margin: 1em 0;
+      }
       .informationsSteps {
         display: block;
       }
