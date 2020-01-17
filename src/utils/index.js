@@ -25,17 +25,17 @@ const callback = (commit, response) => {
     commit('PUSH_NOTIFICATION');
   }
 }
-const formValidator = (fieldName, value, rule) => {
+const formValidator = (value, rule, message) => {
   const rules = [
     {
       name: 'required',
       rule: (payload) => payload == '' || payload == null || payload == undefined,
-      message: `${fieldName} é obrigatório`
+      message
     },
     {
       name: 'length',
-      rule: (payload) => payload.value < payload.qtd,
-      message: `${fieldName} inválido`
+      rule: (payload) => payload && payload.value && payload.value.toString().length < payload.qtd,
+      message
     },
     {
       name: 'email',
@@ -43,7 +43,7 @@ const formValidator = (fieldName, value, rule) => {
         let regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         return !regex.test(String(payload).toLowerCase());
       },
-      message: `${fieldName} inválido`
+      message
     }
   ];
   let selectedRule = rules.find(r => rule === r.name);

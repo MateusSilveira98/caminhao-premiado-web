@@ -81,20 +81,27 @@
             <i class="fa fa-times font-25"></i>
           </a>
         </header>
-        <label class="label">Adicione o(os) número(s) do seu(s) passaporte(s)</label>
-        <div class="field has-addons" v-for="input in inputs" :key="input.id">
+        <label class="label">
+          <span class="has-text-danger">*</span>Adicione o(s) número(s) do seu(s) passaporte(s)
+        </label>
+        <div class="field has-addons" v-for="passport in user.passports" :key="passport.id">
           <div class="control is-expanded">
-            <input
+            <TheMask
               class="input"
-              v-model="input.value"
-              type="text"
-              placeholder="00000000"
-              v-bind:class="{'is-danger': checkForm('passaporte', input.value, 'required') !== '' }"
+              v-model="passport.value"
+              type="tel"
+              :mask="['####.####.####.####']"
+              placeholder="0000.0000.0000.0000"
+              maxlength="20"
+              v-bind:class="{'is-danger': passport.validator.isInvalid }"
             />
-            <span class="has-text-danger">{{checkForm('passaporte', input.value, 'required')}}</span>
+            <span
+              class="has-text-danger"
+              v-if="passport.validator.isInvalid"
+            >{{passport.validator.message}}</span>
           </div>
-          <p class="control" v-if="inputs.length > 1 || input.value">
-            <a class="button is-danger" @click="removeInputField(input)">
+          <p class="control" v-if="user.passports.length > 1 || passport.value">
+            <a class="button is-danger" @click="removeInputField(passport)">
               <i class="fa fa-trash"></i>
             </a>
           </p>
@@ -102,14 +109,14 @@
         <a
           class="button is-fullwidth"
           @click="addInputField()"
-          v-if="inputs.length < 5"
+          v-if="user.passports.length < 5"
         >Adicionar mais um passaporte</a>
         <p class="font-10 margin-top-4 margin-bottom-4">
           Caso já tenha feito o cadastro e deseja cadastrar mais códigos para concorrer a promoção,
           <a>acesse a plataforma com seu CPF</a> e senha cadastrados e siga as instruções
         </p>
         <footer>
-          <a class="button is-fullwidth is-info" @click="savePassport(inputs)">Confirmar</a>
+          <a class="button is-fullwidth is-info" @click="savePassport()">Confirmar</a>
         </footer>
       </section>
       <section class="user-form" v-if="showUserForm">
@@ -126,75 +133,100 @@
         </header>
         <div class="field">
           <p class="control">
-            <label class="label">Nome</label>
+            <label class="label">
+              <span class="has-text-danger">*</span>Nome
+            </label>
             <input
               class="input"
-              v-model="user.name"
+              v-model="user.name.value"
               type="text"
               placeholder="Fulano de tal"
-              v-bind:class="{'is-danger': checkForm('nome', user.name, 'required') !== '' }"
-            />
-            <span class="has-text-danger">{{checkForm('nome', user.name, 'required')}}</span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control">
-            <label class="label">Email</label>
-            <input
-              class="input"
-              v-model="user.email"
-              type="email"
-              placeholder="exemplo@ex.com"
-              v-bind:class="{'is-danger': checkForm('email', user.email, 'email') !== '' }"
-            />
-            <span class="has-text-danger">{{checkForm('email', user.email, 'email')}}</span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control">
-            <label class="label">CPF</label>
-            <TheMask
-              :mask="['###.###.###-##']"
-              type="tel"
-              v-model="user.cpf"
-              placeholder="000.000.000-00"
-              class="input"
-              v-bind:class="{'is-danger': checkForm('CPF', user.cpf, 'required') !== '' }"
-            />
-            <span class="has-text-danger">{{checkForm('CPF', user.cpf, 'required')}}</span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control">
-            <label class="label">Celular/Telefone</label>
-            <TheMask
-              :mask="['(##) ####-####', '(##) #####-####']"
-              type="tel"
-              v-model="user.phone"
-              placeholder="(00) 9 0000-0000 ou (00) 0000-0000"
-              class="input"
-              v-bind:class="{'is-danger': checkForm('celular ou telefone', user.phone, 'required') !== '' }"
+              v-bind:class="{'is-danger': user.name.validator.isInvalid}"
             />
             <span
               class="has-text-danger"
-            >{{checkForm('celular ou telefone', user.phone, 'required')}}</span>
+              v-if="user.name.validator.isInvalid"
+            >{{user.name.validator.message}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
-            <label class="label">Data de nascimento</label>
+            <label class="label">
+              <span class="has-text-danger">*</span>Email
+            </label>
             <input
               class="input"
-              v-model="user.date"
-              type="date"
-              placeholder="dd/mm/yyyy"
-              v-bind:class="{'is-danger': checkForm('data', user.date, 'required') !== '' }"
+              v-model="user.email.value"
+              type="email"
+              placeholder="exemplo@ex.com"
+              v-bind:class="{'is-danger': user.email.validator.isInvalid}"
             />
-            <span class="has-text-danger">{{checkForm('data', user.date, 'required')}}</span>
+            <span
+              class="has-text-danger"
+              v-if="user.email.validator.isInvalid"
+            >{{user.email.validator.message}}</span>
           </p>
         </div>
         <div class="field">
-          <label class="label">Sexo</label>
+          <p class="control">
+            <label class="label">
+              <span class="has-text-danger">*</span>CPF
+            </label>
+            <TheMask
+              :mask="['###.###.###-##']"
+              type="tel"
+              v-model="user.cpf.value"
+              placeholder="000.000.000-00"
+              class="input"
+              v-bind:class="{'is-danger': user.cpf.validator.isInvalid}"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.cpf.validator.isInvalid"
+            >{{user.cpf.validator.message}}</span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">
+              <span class="has-text-danger">*</span>Celular/Telefone
+            </label>
+            <TheMask
+              :mask="['(##) ####-####', '(##) #####-####']"
+              type="tel"
+              v-model="user.phone.value"
+              placeholder="(00) 9 0000-0000 ou (00) 0000-0000"
+              class="input"
+              v-bind:class="{'is-danger': user.phone.validator.isInvalid}"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.phone.validator.isInvalid"
+            >{{user.phone.validator.message}}</span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">
+              <span class="has-text-danger">*</span>Data de nascimento
+            </label>
+            <input
+              class="input"
+              v-model="user.date.value"
+              type="date"
+              placeholder="dd/mm/yyyy"
+              v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.date.validator.isInvalid"
+            >{{user.date.validator.message}}</span>
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">
+            <span class="has-text-danger">*</span>Sexo
+          </label>
           <div class="control flex align-items-center justify-between">
             <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="masculino" v-model="user.gender" />
@@ -211,15 +243,17 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">Estado e cidade</label>
           <div class="columns">
             <div class="column">
+              <label class="label">
+                <span class="has-text-danger">*</span>Estado
+              </label>
               <div class="select is-fullwidth">
                 <select
                   class="is-fullwidth"
-                  v-model="user.state"
-                  @change="getCitiesByState(user.state)"
-                  v-bind:class="{'is-danger': checkForm('estado', user.state, 'required') !== '' }"
+                  v-model="user.state.value"
+                  @change="getCitiesByState(user.state.value)"
+                  v-bind:class="{'is-danger': user.state.validator.isInvalid}"
                 >
                   <option selected disabled>Selecione seu estado</option>
                   <option
@@ -229,20 +263,29 @@
                   >{{state.sigla}} - {{state.nome}}</option>
                 </select>
               </div>
-              <span class="has-text-danger">{{checkForm('estado', user.state, 'required')}}</span>
+              <span
+                class="has-text-danger"
+                v-if="user.state.validator.isInvalid"
+              >{{user.state.validator.message}}</span>
             </div>
             <div class="column">
+              <label class="label">
+                <span class="has-text-danger">*</span>Cidade
+              </label>
               <div class="select is-fullwidth">
                 <select
                   class="is-fullwidth"
-                  v-model="user.city"
-                  v-bind:class="{'is-danger': checkForm('cidade', user.city, 'required') !== '' }"
+                  v-model="user.city.value"
+                  v-bind:class="{'is-danger': user.city.validator.isInvalid}"
                 >
                   <option selected disabled>Selecione sua cidade</option>
                   <option v-for="city in cities" :key="city.id" :value="city.nome">{{city.nome}}</option>
                 </select>
               </div>
-              <span class="has-text-danger">{{checkForm('cidade', user.city, 'required')}}</span>
+              <span
+                class="has-text-danger"
+                v-if="user.city.validator.isInvalid"
+              >{{user.city.validator.message}}</span>
             </div>
           </div>
         </div>
@@ -264,34 +307,40 @@
         </header>
         <div class="field">
           <p class="control">
-            <label class="label">Senha</label>
+            <label class="label">
+              <span class="has-text-danger">*</span>Senha
+            </label>
             <input
               class="input"
-              v-model="user.password"
+              v-model="user.password.value"
               type="password"
               minlength="8"
               placeholder="crie uma senha com o mínimo de 8 caractéres"
-              v-bind:class="{'is-danger': checkForm('senha', {value: user.password, qtd: 8}, 'length') !== '' }"
+              v-bind:class="{'is-danger': user.password.validator.isInvalid}"
             />
             <span
               class="has-text-danger"
-            >{{checkForm('senha', {value: user.password, qtd: 8}, 'length')}}</span>
+              v-if="user.password.validator.isInvalid"
+            >{{user.password.validator.message}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
-            <label class="label">Confirmar senha</label>
+            <label class="label">
+              <span class="has-text-danger">*</span>Confirmar senha
+            </label>
             <input
               class="input"
-              v-model="user.confirmPassword"
+              v-model="user.confirmPassword.value"
               type="password"
               minlength="8"
               placeholder="confirme sua senha"
-              v-bind:class="{'is-danger': checkForm('confirme sua senha', {value: user.confirmPassword, qtd: 8}, 'length') !== '' }"
+              v-bind:class="{'is-danger': user.confirmPassword.validator.isInvalid}"
             />
             <span
               class="has-text-danger"
-            >{{checkForm('confirme sua senha', {value: user.confirmPassword, qtd: 8}, 'length')}}</span>
+              v-if="user.confirmPassword.validator.isInvalid"
+            >{{user.confirmPassword.validator.message}}</span>
           </p>
         </div>
         <footer>
@@ -326,48 +375,100 @@
         </div>
         <div class="field">
           <p class="control">
-            <label class="label">Nome</label>
-            <input class="input" v-model="user.name" type="text" placeholder="Fulano de tal" />
+            <label class="label">
+              <span class="has-text-danger">*</span>Nome
+            </label>
+            <input
+              class="input"
+              v-model="user.name.value"
+              type="text"
+              placeholder="Fulano de tal"
+              v-bind:class="{'is-danger': user.name.validator.isInvalid}"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.name.validator.isInvalid"
+            >{{user.name.validator.message}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
-            <label class="label">Email</label>
-            <input class="input" v-model="user.email" type="email" placeholder="exemplo@ex.com" />
+            <label class="label">
+              <span class="has-text-danger">*</span>Email
+            </label>
+            <input
+              class="input"
+              v-model="user.email.value"
+              type="email"
+              placeholder="exemplo@ex.com"
+              v-bind:class="{'is-danger': user.email.validator.isInvalid}"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.email.validator.isInvalid"
+            >{{user.email.validator.message}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
-            <label class="label">CPF</label>
+            <label class="label">
+              <span class="has-text-danger">*</span>CPF
+            </label>
             <TheMask
               :mask="['###.###.###-##']"
               type="tel"
-              v-model="user.cpf"
+              v-model="user.cpf.value"
               placeholder="000.000.000-00"
               class="input"
+              v-bind:class="{'is-danger': user.cpf.validator.isInvalid}"
             />
+            <span
+              class="has-text-danger"
+              v-if="user.cpf.validator.isInvalid"
+            >{{user.cpf.validator.message}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
-            <label class="label">Celular/Telefone</label>
+            <label class="label">
+              <span class="has-text-danger">*</span>Celular/Telefone
+            </label>
             <TheMask
               :mask="['(##) ####-####', '(##) #####-####']"
               type="tel"
-              v-model="user.phone"
+              v-model="user.phone.value"
               placeholder="(00) 9 0000-0000 ou (00) 0000-0000"
               class="input"
+              v-bind:class="{'is-danger': user.phone.validator.isInvalid}"
             />
+            <span
+              class="has-text-danger"
+              v-if="user.phone.validator.isInvalid"
+            >{{user.phone.validator.message}}</span>
           </p>
         </div>
         <div class="field">
           <p class="control">
-            <label class="label">Data de nascimento</label>
-            <input class="input" v-model="user.date" type="date" placeholder="dd/mm/yyyy" />
+            <label class="label">
+              <span class="has-text-danger">*</span>Data de nascimento
+            </label>
+            <input
+              class="input"
+              v-model="user.date.value"
+              type="date"
+              placeholder="dd/mm/yyyy"
+              v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.date.validator.isInvalid"
+            >{{user.date.validator.message}}</span>
           </p>
         </div>
         <div class="field">
-          <label class="label">Sexo</label>
+          <label class="label">
+            <span class="has-text-danger">*</span>Sexo
+          </label>
           <div class="control flex align-items-center justify-between">
             <label class="radio flex align-items-center">
               <input type="radio" name="gender" value="masculino" v-model="user.gender" />
@@ -384,14 +485,17 @@
           </div>
         </div>
         <div class="field">
-          <label class="label">Estado e cidade</label>
           <div class="columns">
             <div class="column">
+              <label class="label">
+                <span class="has-text-danger">*</span>Estado
+              </label>
               <div class="select is-fullwidth">
                 <select
                   class="is-fullwidth"
-                  v-model="user.state"
-                  @change="getCitiesByState(user.state)"
+                  v-model="user.state.value"
+                  @change="getCitiesByState(user.state.value)"
+                  v-bind:class="{'is-danger': user.state.validator.isInvalid}"
                 >
                   <option selected disabled>Selecione seu estado</option>
                   <option
@@ -401,14 +505,29 @@
                   >{{state.sigla}} - {{state.nome}}</option>
                 </select>
               </div>
+              <span
+                class="has-text-danger"
+                v-if="user.state.validator.isInvalid"
+              >{{user.state.validator.message}}</span>
             </div>
             <div class="column">
+              <label class="label">
+                <span class="has-text-danger">*</span>Cidade
+              </label>
               <div class="select is-fullwidth">
-                <select class="is-fullwidth" v-model="user.city">
+                <select
+                  class="is-fullwidth"
+                  v-model="user.city.value"
+                  v-bind:class="{'is-danger': user.city.validator.isInvalid}"
+                >
                   <option selected disabled>Selecione sua cidade</option>
                   <option v-for="city in cities" :key="city.id" :value="city.nome">{{city.nome}}</option>
                 </select>
               </div>
+              <span
+                class="has-text-danger"
+                v-if="user.city.validator.isInvalid"
+              >{{user.city.validator.message}}</span>
             </div>
           </div>
         </div>
@@ -474,23 +593,81 @@ export default {
       showNumber: false,
       states: [],
       cities: [],
-      inputs: [
-        {
-          id: mockId++,
-          value: ""
-        }
-      ],
       user: {
+        passports: [
+          {
+            id: mockId++,
+            value: null,
+            validator: {
+              isInvalid: false,
+              message: ""
+            }
+          }
+        ],
         gender: "outro",
-        name: null,
-        email: null,
-        cpf: null,
-        phone: null,
-        date: null,
-        state: null,
-        city: null,
-        password: null,
-        confirmPassword: null
+        name: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        email: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        cpf: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        phone: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        date: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        state: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        city: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        password: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        confirmPassword: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        }
       },
       tutorialSteps: [
         {
@@ -578,29 +755,63 @@ export default {
     handleModal() {
       this.showModal = !this.showModal;
       this.$store.dispatch("setSelectedMenuItem", "");
+      this.reset();
     },
     addInputField() {
-      if (this.inputs.length < 5) this.inputs.push({ id: mockId++, value: "" });
+      if (this.user.passports.length < 5)
+        this.user.passports.push({
+          id: mockId++,
+          value: null,
+          validator: { isInvalid: false, message: "" }
+        });
     },
-    removeInputField(input) {
-      if (this.inputs.length > 1)
-        this.inputs.splice(this.inputs.indexOf(input), 1);
-      else this.inputs[0].value = "";
+    removeInputField(passport) {
+      if (this.user.passports.length > 1)
+        this.user.passports.splice(this.user.passports.indexOf(passport), 1);
+      else this.user.passports[0].value = "";
     },
-    checkForm(fieldName, value, rule) {
-      let validateCallback = formValidator(fieldName, value, rule);
-      return validateCallback !== "isValid" ? validateCallback : "";
+    checkConditionsToValidator(
+      requiredCondition = null,
+      lengthCondition = null,
+      emailCondition = null
+    ) {
+      return {
+        isInvalid:
+          (requiredCondition && requiredCondition !== "isValid") ||
+          (lengthCondition && lengthCondition !== "isValid") ||
+          (emailCondition && emailCondition !== "isValid"),
+        message:
+          requiredCondition === "isValid"
+            ? lengthCondition === "isValid"
+              ? emailCondition
+              : lengthCondition
+            : requiredCondition
+      };
     },
-    savePassport(inputs) {
+    savePassport() {
       let isValidArray = [];
-      for (let index = 0; index < inputs.length; index++) {
-        const { value } = inputs[index];
-        isValidArray.push(
-          formValidator("passaporte", value, "required") === "isValid"
+      let requiredCondition = "";
+      let lengthCondition = "";
+      for (let index = 0; index < this.user.passports.length; index++) {
+        let { value, validator } = this.user.passports[index];
+        requiredCondition = formValidator(
+          value,
+          "required",
+          "informe seu passaporte."
         );
+        lengthCondition = formValidator(
+          { value, qtd: 16 },
+          "length",
+          "insira no mínimo 16 números."
+        );
+        validator = this.checkConditionsToValidator(
+          requiredCondition,
+          lengthCondition
+        );
+        isValidArray.push(!validator.isInvalid);
+        this.user.passports[index].validator = validator;
       }
       if (isValidArray.filter(value => !value).length === 0) {
-        this.user.passports = inputs;
         this.user.numbers = [];
         for (let index = 0; index < this.user.passports.length; index++) {
           this.user.numbers.push(Math.floor(Math.random() * 1000));
@@ -611,18 +822,47 @@ export default {
     },
     saveUser() {
       let isValidArray = [];
-      Object.keys(this.user).forEach(prop => {
-        if (
-          prop !== "passports" &&
-          prop !== "numbers" &&
-          prop !== "password" &&
-          prop !== "confirmPassword"
-        ) {
-          isValidArray.push(
-            formValidator(prop, this.user[prop], "required") === "isValid"
+      let requiredCondition = "";
+      let emailCondition = "";
+      let propsArray = [
+        { prop: "name", message: "seu nome" },
+        { prop: "cpf", message: "seu cpf" },
+        { prop: "phone", message: "seu celular ou telefone" },
+        { prop: "date", message: "sua data de nascimento" },
+        { prop: "state", message: "seu estado" },
+        { prop: "city", message: "sua cidade" }
+      ];
+      Object.keys(this.user).forEach(key => {
+        let { value, validator } = this.user[key];
+        let valuePropName = propsArray.find(p => p.prop === key);
+        if (valuePropName) {
+          requiredCondition = formValidator(
+            value,
+            "required",
+            `informe ${valuePropName.message}`
           );
+          validator = this.checkConditionsToValidator(requiredCondition);
+          isValidArray.push(!validator.isInvalid);
+          this.user[key].validator = validator;
         }
       });
+      requiredCondition = formValidator(
+        this.user.email.value,
+        "required",
+        "informe seu email"
+      );
+      emailCondition = formValidator(
+        this.user.email.value,
+        "email",
+        "insira um email válido"
+      );
+      this.user.email.validator = this.checkConditionsToValidator(
+        requiredCondition,
+        "isValid",
+        emailCondition
+      );
+      if (this.user.email.validator.isInvalid)
+        isValidArray.push(!this.user.email.validator.isInvalid);
       if (isValidArray.filter(value => !value).length === 0) {
         this.showUserForm = false;
         this.showPassword = true;
@@ -630,34 +870,183 @@ export default {
     },
     savePassword() {
       let isValidArray = [];
-      Object.keys(this.user).forEach(prop => {
-        if (prop === "password" || prop === "confirmPassword") {
-          isValidArray.push(
-            formValidator(prop, this.user[prop], "required") === "isValid"
+      let requiredCondition = "";
+      let lengthCondition = "";
+      let propsArray = [
+        { prop: "password", message: "informe sua senha" },
+        { prop: "confirmPassword", message: "insira a confirmação da senha" }
+      ];
+      Object.keys(this.user).forEach(key => {
+        let { value, validator } = this.user[key];
+        let valuePropName = propsArray.find(p => p.prop === key);
+        if (valuePropName) {
+          requiredCondition = formValidator(
+            value,
+            "required",
+            valuePropName.message
           );
+          lengthCondition = formValidator(
+            { value, qtd: 8 },
+            "length",
+            "insira no mínimo 8 caratéres"
+          );
+          validator = this.checkConditionsToValidator(
+            requiredCondition,
+            lengthCondition
+          );
+          isValidArray.push(!validator.isInvalid);
+          this.user[key].validator = validator;
         }
       });
+      if (!this.user.confirmPassword.validator.isInvalid)
+        this.user.confirmPassword.validator = {
+          isInvalid:
+            this.user.password.value !== this.user.confirmPassword.value,
+          message: "As senhas não se correspondem."
+        };
+      if (this.user.confirmPassword.validator.isInvalid)
+        isValidArray.push(!this.user.confirmPassword.validator.isInvalid);
       if (isValidArray.filter(value => !value).length === 0) {
-        if (this.user.password === this.user.confirmPassword) {
-          this.showPassword = false;
-          this.showConfirmDatas = true;
-        } else {
-          this.$store.dispatch("pushNotification", {
-            message: "As senhas não se correspondem".toUpperCase(),
-            messageClass: "danger"
-          });
-        }
+        this.showPassword = false;
+        this.showConfirmDatas = true;
       }
     },
     confirm() {
-      this.showConfirmDatas = false;
-      this.showNumber = true;
+      let isValidArray = [];
+      let requiredCondition = "";
+      let emailCondition = "";
+      let propsArray = [
+        { prop: "name", message: "seu nome" },
+        { prop: "cpf", message: "seu cpf" },
+        { prop: "phone", message: "seu celular ou telefone" },
+        { prop: "date", message: "sua data de nascimento" },
+        { prop: "state", message: "seu estado" },
+        { prop: "city", message: "sua cidade" }
+      ];
+      Object.keys(this.user).forEach(key => {
+        let { value, validator } = this.user[key];
+        let valuePropName = propsArray.find(p => p.prop === key);
+        if (valuePropName) {
+          requiredCondition = formValidator(
+            value,
+            "required",
+            `informe ${valuePropName.message}`
+          );
+          validator = this.checkConditionsToValidator(requiredCondition);
+          isValidArray.push(!validator.isInvalid);
+          this.user[key].validator = validator;
+        }
+      });
+      requiredCondition = formValidator(
+        this.user.email.value,
+        "required",
+        "informe seu email"
+      );
+      emailCondition = formValidator(
+        this.user.email.value,
+        "email",
+        "insira um email válido"
+      );
+      this.user.email.validator = this.checkConditionsToValidator(
+        requiredCondition,
+        "isValid",
+        emailCondition
+      );
+      if (this.user.email.validator.isInvalid)
+        isValidArray.push(!this.user.email.validator.isInvalid);
+      if (isValidArray.filter(value => !value).length === 0) {
+        this.showConfirmDatas = false;
+        this.showNumber = true;
+      }
     },
     async getCitiesByState(state) {
       let response = await services.get(
         `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state.id}/municipios`
       );
       this.cities = _.orderBy(response.data, "nome");
+    },
+    reset() {
+      this.showPassports = true;
+      this.showUserForm = false;
+      this.showPassword = false;
+      this.showConfirmDatas = false;
+      this.showNumber = false;
+      this.user = {
+        passports: [
+          {
+            id: mockId++,
+            value: null,
+            validator: {
+              isInvalid: false,
+              message: ""
+            }
+          }
+        ],
+        gender: "outro",
+        name: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        email: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        cpf: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        phone: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        date: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        state: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        city: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        password: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        },
+        confirmPassword: {
+          value: null,
+          validator: {
+            isInvalid: false,
+            message: ""
+          }
+        }
+      };
     }
   },
   async mounted() {
