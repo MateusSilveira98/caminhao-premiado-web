@@ -374,14 +374,16 @@
           </a>
         </header>
         <div class="field">
-          <div class="control">
-            <label class="label">Seus passaportes</label>
-            <div class="select is-fullwidth">
-              <select class="is-fullwidth">
-                <option selected disabled>veja seus passaportes</option>
-                <option v-for="passport in user.passports" :key="passport.id">{{passport.value}}</option>
-              </select>
-            </div>
+          <label class="label">Passaporte(s)</label>
+          <div class="list-badge" v-for="item in user.numbers" :key="item.number">
+            <p>{{item.passport}}</p>
+            <span
+              class="has-text-danger"
+              @click="removePassportOnListBadge(item)"
+              v-if="user.passports.length > 1"
+            >
+              <i class="fa fa-trash"></i>
+            </span>
           </div>
         </div>
         <div class="field">
@@ -540,8 +542,8 @@
         <div class="field">
           <strong>Veja seu(s) número(s) da sorte</strong>
         </div>
-        <div class="field" v-for="number in user.numbers" :key="number">
-          <strong>{{number}}</strong>
+        <div class="field" v-for="item in user.numbers" :key="item.number">
+          <strong>{{item.number}}</strong>
         </div>
         <footer>
           <a class="button is-info is-fullwidth" @click="handleModal()">Acesse o Cresça Play</a>
@@ -751,17 +753,28 @@ export default {
       this.reset();
     },
     addInputField() {
-      if (this.user.passports.length < 5)
+      if (this.user.passports.length < 5) {
         this.user.passports.push({
           id: mockId++,
           value: null,
           validator: { isInvalid: false, message: "" }
         });
+      }
     },
     removeInputField(passport) {
       if (this.user.passports.length > 1)
         this.user.passports.splice(this.user.passports.indexOf(passport), 1);
       else this.user.passports[0].value = "";
+    },
+    removePassportOnListBadge(item) {
+      if (this.user.passports.length > 1 && this.user.numbers.length > 1) {
+        let passport = this.user.passports.find(
+          passport => item.passport === passport.value
+        );
+        let number = this.user.numbers.find(num => item.number === num.number);
+        this.user.passports.splice(this.user.passports.indexOf(passport), 1);
+        this.user.numbers.splice(this.user.numbers.indexOf(number), 1);
+      }
     },
     checkConditionsToValidator(
       requiredCondition = null,
@@ -828,7 +841,10 @@ export default {
       if (isValidArray.filter(value => !value).length === 0) {
         this.user.numbers = [];
         for (let index = 0; index < this.user.passports.length; index++) {
-          this.user.numbers.push(Math.floor(Math.random() * 1000));
+          this.user.numbers.push({
+            number: Math.floor(Math.random() * 1000),
+            passport: this.user.passports[index].value
+          });
         }
         this.showUserForm = true;
         this.showPassports = false;
@@ -1075,6 +1091,15 @@ export default {
 .home {
   position: relative;
   top: 8em;
+  .list-badge {
+    padding: 0.5em;
+    background: #ece8e8;
+    margin-bottom: 1em;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   .banner {
     width: 100%;
     background: #ffcc38;
