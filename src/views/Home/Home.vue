@@ -74,6 +74,36 @@
       </div>
     </div>
     <Modal :showModal="showModal" @close="handleModal()">
+      <section class="login" v-if="showLoginCpf">
+        <header class="flex justify-between">
+          <span class="title">Login com seu CPF</span>
+          <a @click="handleModal()">
+            <i class="fa fa-times font-25"></i>
+          </a>
+        </header>
+        <div class="field">
+          <p class="control">
+            <label class="label">
+              <span class="has-text-danger">*</span>CPF
+            </label>
+            <TheMask
+              :mask="['###.###.###-##']"
+              type="tel"
+              v-model="user.cpf.value"
+              placeholder="000.000.000-00"
+              class="input"
+              v-bind:class="{'is-danger': user.cpf.validator.isInvalid}"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.cpf.validator.isInvalid"
+            >{{user.cpf.validator.message}}</span>
+          </p>
+        </div>
+        <footer>
+          <a class="button is-fullwidth is-info" @click="loginCpf()">Confirmar</a>
+        </footer>
+      </section>
       <section class="passaport" v-if="showPassports">
         <header class="flex justify-between">
           <span class="title">Passaporte</span>
@@ -165,25 +195,6 @@
               class="has-text-danger"
               v-if="user.email.validator.isInvalid"
             >{{user.email.validator.message}}</span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control">
-            <label class="label">
-              <span class="has-text-danger">*</span>CPF
-            </label>
-            <TheMask
-              :mask="['###.###.###-##']"
-              type="tel"
-              v-model="user.cpf.value"
-              placeholder="000.000.000-00"
-              class="input"
-              v-bind:class="{'is-danger': user.cpf.validator.isInvalid}"
-            />
-            <span
-              class="has-text-danger"
-              v-if="user.cpf.validator.isInvalid"
-            >{{user.cpf.validator.message}}</span>
           </p>
         </div>
         <div class="field">
@@ -412,25 +423,6 @@
         <div class="field">
           <p class="control">
             <label class="label">
-              <span class="has-text-danger">*</span>CPF
-            </label>
-            <TheMask
-              :mask="['###.###.###-##']"
-              type="tel"
-              v-model="user.cpf.value"
-              placeholder="000.000.000-00"
-              class="input"
-              v-bind:class="{'is-danger': user.cpf.validator.isInvalid}"
-            />
-            <span
-              class="has-text-danger"
-              v-if="user.cpf.validator.isInvalid"
-            >{{user.cpf.validator.message}}</span>
-          </p>
-        </div>
-        <div class="field">
-          <p class="control">
-            <label class="label">
               <span class="has-text-danger">*</span>Celular/Telefone
             </label>
             <TheMask
@@ -586,7 +578,8 @@ export default {
   data() {
     return {
       showModal: false,
-      showPassports: true,
+      showLoginCpf: true,
+      showPassports: false,
       showUserForm: false,
       showPassword: false,
       showConfirmDatas: false,
@@ -788,6 +781,27 @@ export default {
             : requiredCondition
       };
     },
+    loginCpf() {
+      let isValidArray = [];
+      let requiredCondition = "";
+      let lengthCondition = "";
+      let { value, validator } = this.user.cpf;
+      requiredCondition = formValidator(value, "required", "informe seu cpf.");
+      lengthCondition = formValidator(
+        { value, qtd: 11 },
+        "length",
+        "insira no mínimo 11 números."
+      );
+      validator = this.checkConditionsToValidator(
+        requiredCondition,
+        lengthCondition
+      );
+      this.user.cpf.validator = validator;
+      if (!this.user.cpf.validator.isInvalid) {
+        this.showLoginCpf = false;
+        this.showPassports = true;
+      }
+    },
     savePassport() {
       let isValidArray = [];
       let requiredCondition = "";
@@ -826,7 +840,6 @@ export default {
       let emailCondition = "";
       let propsArray = [
         { prop: "name", message: "seu nome" },
-        { prop: "cpf", message: "seu cpf" },
         { prop: "phone", message: "seu celular ou telefone" },
         { prop: "date", message: "sua data de nascimento" },
         { prop: "state", message: "seu estado" },
@@ -917,7 +930,6 @@ export default {
       let emailCondition = "";
       let propsArray = [
         { prop: "name", message: "seu nome" },
-        { prop: "cpf", message: "seu cpf" },
         { prop: "phone", message: "seu celular ou telefone" },
         { prop: "date", message: "sua data de nascimento" },
         { prop: "state", message: "seu estado" },
@@ -966,7 +978,8 @@ export default {
       this.cities = _.orderBy(response.data, "nome");
     },
     reset() {
-      this.showPassports = true;
+      this.showLoginCpf = true;
+      this.showPassports = false;
       this.showUserForm = false;
       this.showPassword = false;
       this.showConfirmDatas = false;
