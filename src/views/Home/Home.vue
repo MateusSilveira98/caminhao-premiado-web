@@ -200,11 +200,14 @@ export default {
   .tutorial {
     text-align: center;
     background: #ffcc38;
-    padding: 3em;
+    padding: 3em 5em;
     padding-bottom: 12em;
     .tutorialSteps {
-      display: flex;
-      justify-content: space-between;
+      justify-content: center;
+      display: grid;
+      font-weight: bold;
+      position: relative;
+      grid-template-columns: auto auto auto auto auto;
       font-weight: bold;
       position: relative;
     }
@@ -212,7 +215,7 @@ export default {
   .informations {
     text-align: center;
     background: #f1f1f2;
-    padding: 3em;
+    padding: 3em 5em;
     position: relative;
     padding-top: 14em;
     .informationsSteps {
@@ -224,7 +227,7 @@ export default {
     .logo {
       position: absolute;
       display: flex;
-      width: 100%;
+      width: 93%;
       justify-content: center;
       top: -11em;
     }

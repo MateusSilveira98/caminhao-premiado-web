@@ -53,6 +53,8 @@ export default {
   }
   p {
     font-size: 0.8300920204603125rem;
+    width: 60%;
+    margin: 0 auto;
   }
 }
 @media (min-width: 914px) and (max-width: 1519px) {
