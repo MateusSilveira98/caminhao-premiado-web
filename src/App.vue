@@ -41,8 +41,16 @@ export default {
   },
   methods: {
     verifySelectedItem(item) {
-      if (item !== "login") this.$store.dispatch("setSelectedMenuItem", item);
-      else window.location.href = "#";
+      if (this.$route.path == "/rules" && item !== "rules") {
+        this.$router.push("/");
+        this.$store.dispatch("setSelectedMenuItem", item);
+      } else if (item === "rules") {
+        this.$router.push("/rules");
+      } else if (item !== "login") {
+        this.$store.dispatch("setSelectedMenuItem", item);
+      } else {
+        window.location.href = "else";
+      }
     }
   }
 };
