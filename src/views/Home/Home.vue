@@ -1,7 +1,7 @@
 <template>
   <article class="home">
     <div class="banner" ref="home">
-      <img src="@/assets/images/banner_home_1.jpg" alt="banner1" />
+      <img src="@/assets/images/banner_home_1.1.jpg" alt="banner1" />
       <img src="@/assets/images/banner_home_2.jpg" alt="banner2" />
     </div>
     <div class="tutorial" ref="tutorial">
