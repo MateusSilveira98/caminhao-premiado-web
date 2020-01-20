@@ -1,0 +1,86 @@
+<template>
+  <div>
+    <strong>{{title}}</strong>
+    <ul class="list" v-if="list.length > 0">
+      <li class="list-item" v-for="item in list" :key="item.id">
+        <p>{{item.text}}</p>
+        <template v-if="item.child">
+          <ul class="list" v-if="item.type === 'list'">
+            <li class="list-item" v-for="subitem in item.child.list" :key="subitem.id">
+              <p>{{subitem.text}}</p>
+              <ul class="list" v-if="subitem.sublist">
+                <li class="list-item" v-for="subListItem in subitem.sublist" :key="subListItem.id">
+                  <p>{{subListItem.text}}</p>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div v-if="item.type === 'image'" class="image">
+            <img :src="getImageUrl(item.child.src)" :alt="item.child.alt || 'list item'" />
+          </div>
+          <div v-if="item.type === 'table'">
+            <div class="table-container">
+              <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                  <th v-for="col in item.child.cols" :key="col">
+                    <span>{{col}}</span>
+                  </th>
+                </thead>
+                <tbody>
+                  <tr v-for="row in item.child.rows" :key="row.id">
+                    <td v-for="prop in row.props" :key="prop">
+                      <span>{{prop}}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ul class="list">
+              <li
+                class="list-item"
+                v-for="subitem in item.child.list"
+                :key="subitem.id"
+              >{{subitem.text}}</li>
+            </ul>
+          </div>
+        </template>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    title: { type: String, default: "list item" },
+    list: { type: Array, default: () => [] }
+  },
+  methods: {
+    getImageUrl(url) {
+      return require(`@/assets/images/${url}`);
+    }
+  }
+};
+</script>
+
+<style lang="scss">
+.image {
+  display: flex;
+  position: relative;
+  width: 100%;
+  justify-content: center;
+  img {
+    width: 15%;
+  }
+}
+.list-item {
+  font-size: 0.75rem;
+}
+@media (min-width: 320px) and (max-width: 913px) {
+  .image {
+    img {
+      width: 100%;
+    }
+  }
+}
+</style>
