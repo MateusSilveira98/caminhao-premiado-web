@@ -65,22 +65,42 @@ export default {
 
 <style lang="scss">
 .image {
-  display: flex;
+  display: flex !important;
   position: relative;
   width: 100%;
   justify-content: center;
   img {
-    width: 15%;
+    width: 15% !important;
   }
 }
 .list-item {
   font-size: 0.75rem;
 }
-@media (min-width: 320px) and (max-width: 913px) {
+@media (min-width: 320px) and (max-width: 410px) {
   .image {
     img {
-      width: 100%;
+      width: 100% !important;
     }
+  }
+  .list-item {
+    font-size: 0.65rem;
+  }
+}
+@media (min-width: 410px) and (max-width: 750px) {
+  .image {
+    img {
+      width: 75% !important;
+    }
+  }
+}
+@media (min-width: 750px) and (max-width: 1023px) {
+  .image {
+    img {
+      width: 75% !important;
+    }
+  }
+  .list-item {
+    font-size: 1rem;
   }
 }
 </style>

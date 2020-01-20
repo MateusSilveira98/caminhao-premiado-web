@@ -3,7 +3,10 @@
     <div class="banner">
       <img src="@/assets/images/banner_regulamento.jpg" alt="banner1" />
     </div>
-    <div class="rule">
+    <div
+      class="rule"
+      v-bind:style="{ 'background-image': `url(${'../assets/images/bg_regulamento.jpg'})` }"
+    >
       <h1 class="title has-text-centered">REGULAMENTO</h1>
       <h1 class="title margin-top-1">Zurich Capitalização</h1>
       <h2 class="subtitle">Regulamento da Promoção Comercial / Modalidade Incentivo</h2>
@@ -16,7 +19,13 @@
       <p class="has-text-centered margin-bottom-3">
         <strong>Período de Participação(*) na Promoção:</strong> 23/01/2020 a 31/07/2020
       </p>
-      <RulesList class="margin-bottom-3" v-for="rule in ruleList" :key="rule.id" :title="rule.title" :list="rule.list" />
+      <RulesList
+        class="margin-bottom-3"
+        v-for="rule in ruleList"
+        :key="rule.id"
+        :title="rule.title"
+        :list="rule.list"
+      />
     </div>
     <div class="contacts" ref="contact">
       <h1 class="title font-25">Contato</h1>
@@ -48,7 +57,7 @@
 <script>
 import RegisterModalForm from "./RegisterModalForm.vue";
 import RulesList from "./RulesList.vue";
-import ruleList from './rules.json';
+import ruleList from "./rules.json";
 let mockId = 1;
 export default {
   components: {
@@ -77,7 +86,11 @@ export default {
   }
   .rule {
     padding: 2em 3em;
-    background: #ffcc38;
+    background-color: #ffcc38;
+    position: relative;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
   }
   .contacts {
     text-align: center;
