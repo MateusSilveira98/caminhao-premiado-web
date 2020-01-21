@@ -92,7 +92,7 @@ export default {
   }
   .rule {
     padding: 2em 3em;
-    background-color: #ffcc38;
+    background-color: white;
     position: relative;
     background-repeat: no-repeat;
     background-attachment: fixed;
