@@ -6,7 +6,8 @@ import '@/filters/index';
 import '@/App.scss';
 import axios from 'axios';
 axios.defaults.headers.common['Content-Type'] = `application/json`;
-
+import 'vue2-datepicker/index.css';
+import 'vue2-datepicker/locale/pt-br';
 new Vue({
   router,
   store,

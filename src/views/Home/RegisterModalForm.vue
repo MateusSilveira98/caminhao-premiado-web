@@ -153,6 +153,15 @@
             type="date"
             placeholder="dd/mm/yyyy"
             v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            v-if="isMobile"
+          />
+          <Datepicker
+            :inputClass="{'is-danger': user.date.validator.isInvalid, 'input': true}"
+            v-model="user.date.value"
+            format="DD/MM/YYYY"
+            valuetype="format"
+            placeholder="dd/mm/yyyy"
+            v-if="!isMobile"
           />
           <span
             class="has-text-danger"
@@ -375,6 +384,14 @@
             type="date"
             placeholder="dd/mm/yyyy"
             v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            v-if="isMobile"
+          />
+          <Datepicker
+            v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            v-model="user.date.value"
+            valuetype="dd/mm/yyyy"
+            placeholder="dd/mm/yyyy"
+            v-if="!isMobile"
           />
           <span
             class="has-text-danger"
@@ -482,12 +499,14 @@ import _ from "lodash";
 import services from "@/store/services";
 import { formValidator } from "@/utils";
 import { TheMask } from "vue-the-mask";
+import Datepicker from "vue2-datepicker";
 let mockId = 1;
 
 export default {
   components: {
     Modal,
-    TheMask
+    TheMask,
+    Datepicker
   },
   computed: {
     ...mapState(["menuItem"])
@@ -506,6 +525,7 @@ export default {
       showPassword: false,
       showConfirmDatas: false,
       showNumber: false,
+      isMobile: false,
       states: [],
       cities: [],
       user: {
@@ -923,6 +943,7 @@ export default {
       "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
     );
     this.states = _.orderBy(response.data, "nome");
+    this.isMobile = screen.width < 1300;
   }
 };
 </script>
