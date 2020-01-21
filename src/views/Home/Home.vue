@@ -24,7 +24,7 @@
         class="font-10 margin-top-1"
       >*O(s) número(s) da sorte que você concorrerá pela Loteria Federal são de 5 dígitos e aparecerão de acordo com a quantidade de passaportes cadastrados no momento da confirmação da promoção. Consulte regulamento.</p>
     </div>
-    <div class="informations">
+    <div class="informations" ref="informations">
       <div class="logo">
         <img src="@/assets/images/cresca_play_pessoas.png" alt="creacaplay" />
       </div>
@@ -35,6 +35,9 @@
       <p class="font-25 margin-bottom-3">
         A sala de aula é onde você quiser e o professor é você quem escolhe.
         Aqui você é o protagonista. Dê um play no seu conhecimento!
+      </p>
+      <p class="font-25 has-text-centered margin-bottom-3">
+        <a :href="config.CRESCA_URL" class="button">Acesse</a>
       </p>
       <div class="informationsSteps">
         <Step
@@ -48,7 +51,7 @@
       </div>
       <p
         class="font-10 margin-top-1"
-      >*O acesso de até 6 meses à plataforma Cresça Play deverá ser realizado até um dia antes do sorteio. Após esse prazo, o passaporte não será válido. Consulte regulamento.</p>
+      >O tempo de acesso à plataforma para visualização dos e-books, será de até 06 (seis) meses por passaporte cadastrado, contados do primeiro acesso. Assim, este prazo poderá se estender de acordo com a quantidade de passaportes cadastrados</p>
     </div>
     <div class="contacts" ref="contact">
       <h1 class="title font-25">Contato</h1>
@@ -81,7 +84,7 @@
 import Step from "./Step.vue";
 import RegisterModalForm from "./RegisterModalForm.vue";
 import { mapState } from "vuex";
-
+import config from '@/config.json';
 let mockId = 1;
 export default {
   components: {
@@ -98,6 +101,7 @@ export default {
   },
   data() {
     return {
+      config,
       tutorialSteps: [
         {
           id: mockId++,
@@ -121,7 +125,7 @@ export default {
           showLine: true,
           url: "passoApasso_3.png",
           text:
-            "Confirme sua participação clicando no botão: PARTICIPAR DA PROMOÇÃO. Você irá ter acesso a(os) número(s) da sorte* e a plataforma de cursos Cresça Play."
+            "Confirme seus dados e clique em salvar para participar da promoção. Você irá ter acesso a(os) número(s) da sorte* e a plataforma de cursos Cresça Play."
         },
         {
           id: mockId++,
@@ -137,7 +141,7 @@ export default {
           showLine: false,
           url: "passoApasso_5.png",
           text:
-            "Se você já está cadastrado e deseja inserir mais passaportes, entre com seu login e senha e insira no seu perfil do aluno."
+            "Se você já está cadastrado e deseja inserir mais passaporte, entre com seu cpf em cadastrar passaporte ou insira no seu perfil do aluno na plataforma Cresça Play"
         }
       ],
       informationsSteps: [
@@ -218,6 +222,13 @@ export default {
     padding: 3em 5em;
     position: relative;
     padding-top: 14em;
+    .button {
+      background: #6db2fc;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 0.5em 1.5em;
+      border-radius: 0;
+    }
     .informationsSteps {
       display: flex;
       justify-content: space-between;

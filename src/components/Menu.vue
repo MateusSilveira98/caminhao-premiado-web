@@ -27,6 +27,10 @@
         >Como Participar</a>
         <a
           class="navbar-item"
+          @click="selectMenu('informations'); isBurgerActive = !isBurgerActive"
+        >Conheça o cresça play</a>
+        <a
+          class="navbar-item"
           @click="selectMenu('rules'); isBurgerActive = !isBurgerActive"
         >Regulamento</a>
         <a
@@ -39,19 +43,21 @@
           <div class="button-labeled">
             <label>Primeiro Acesso</label>
             <a
-              class="button is-yellow"
+              class="button"
               @click="selectMenu('register'); isBurgerActive = !isBurgerActive"
             >Cadastrar Passaporte</a>
           </div>
         </div>
         <div class="navbar-item">
           <div class="button-labeled">
-            <label>Já tenho cadastro</label>
-            <label>ou cadastrar novo passaporte</label>
+            <label>Acesse o</label>
             <a
-              class="button is-yellow"
-              @click="selectMenu('login'); isBurgerActive = !isBurgerActive"
-            >Entrar</a>
+              :href="config.CRESCA_URL"
+              class="button login-button"
+              @click="isBurgerActive = !isBurgerActive"
+            >
+              <img src="@/assets/images/botao_crescaplay.png" alt />
+            </a>
           </div>
         </div>
       </div>
@@ -60,9 +66,12 @@
 </template>
 
 <script>
+import config from '@/config.json';
+
 export default {
   data() {
     return {
+      config,
       isBurgerActive: false
     };
   },
@@ -78,8 +87,9 @@ export default {
 nav.navbar {
   background: #0f66be;
   font-weight: bold;
-  padding-bottom: 2em;
-  font-size: 1.25rem;
+  padding-bottom: 2.5em;
+  padding-top: 0.5em;
+  font-size: 1rem;
   position: fixed;
   width: 100%;
   top: 0;
@@ -98,12 +108,12 @@ nav.navbar {
   .navbar-end-items {
     display: flex;
     align-items: flex-end;
-    width: 60%;
-    justify-content: space-between;
+    justify-content: flex-end;
+    width: 50%;
     .button-labeled {
       label {
         display: block;
-        color: #ffcc38;
+        color: white;
         font-size: 0.8300920204603125rem;
         margin: 0;
         font-weight: normal;
@@ -111,21 +121,26 @@ nav.navbar {
           margin-bottom: 0.5em;
         }
       }
-      .button {
+      .button,
+      .login-button {
         margin: 0;
         background: #ffcc38;
         color: #0f66be;
         border: none;
         border-radius: 0;
+        font-size: 0.75rem;
         text-transform: uppercase;
+      }
+      .login-button {
+        background: #6db2fc;
       }
     }
   }
   .navbar-start-items {
     display: flex;
     justify-content: space-between;
-    width: 100%;
     margin: 0 1em;
+    width: 100%;
   }
 }
 @media (min-width: 320px) and (max-width: 913px) {

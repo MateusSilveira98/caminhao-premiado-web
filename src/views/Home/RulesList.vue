@@ -73,8 +73,20 @@ export default {
     width: 15% !important;
   }
 }
+.list {
+  box-shadow: 0 2px 3px #0a0a0a59, 0 0 0 1px #0a0a0a59 !important;
+}
 .list-item {
   font-size: 0.75rem;
+  font-weight: bold;
+  background: white;
+  .table,
+  .list {
+    margin: 1em 0;
+  }
+}
+.list-item:not(:last-child) {
+  border-bottom: 1px solid #0a0a0a59 !important;
 }
 @media (min-width: 320px) and (max-width: 410px) {
   .image {

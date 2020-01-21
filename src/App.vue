@@ -46,10 +46,6 @@ export default {
         this.$store.dispatch("setSelectedMenuItem", item);
       } else if (item === "rules") {
         this.$router.push("/rules");
-      } else if (item !== "login") {
-        this.$store.dispatch("setSelectedMenuItem", item);
-      } else {
-        window.location.href = "else";
       }
     }
   }

@@ -26,6 +26,12 @@
         :title="rule.title"
         :list="rule.list"
       />
+      <p class="has-text-centered">
+        <strong>TERMO DE CESSÃO DE DIREITO DE PARTICIPAÇÃO EM SORTEIOS DE TÍTULOS DE CAPITALIZAÇÃO</strong>
+      </p>
+      <p
+        class="has-text-centered margin-top-1"
+      >Pelo presente termo, a CIATECH TECNOLOGIA EDUCACIONAL LTDA., inscrita no CNPJ n° 01.367.958/0001-88, que é a empresa PROMOTORA DA PROMOÇÃO e detentora dos Títulos de Capitalização da Modalidade Incentivo, cede gratuitamente ao Participante que aderir a esta Promoção o direito de participação em sorteios, conforme regras definidas neste REGULAMENTO DA PROMOÇÃO, disponível na íntegra Nos sites: https://www.zurich.com.br/pt-br/seguros-empresariais/capitalizacao e http://www.caminhaodasortedujuca.com.br/, e que estará disponível durante todo período de vigência da Promoção. Os sorteios serão garantidos por Títulos de Capitalização emitidos pela ZURICH BRASIL CAPITALIZAÇÃO S/A, inscrita no CNPJ nº 17.266.009/0001-41, aprovado conforme Processo SUSEP nº 15414.901582/2018-96.</p>
     </div>
     <div class="contacts" ref="contact">
       <h1 class="title font-25">Contato</h1>

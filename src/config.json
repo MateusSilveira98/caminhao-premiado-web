@@ -1,4 +1,5 @@
 {
   "API_URL": "https://pokeapi.co/api/v2/",
-  "IBGE_API_URL": "https://servicodados.ibge.gov.br/api/v1/localidades/"
+  "IBGE_API_URL": "https://servicodados.ibge.gov.br/api/v1/localidades/",
+  "CRESCA_URL": "https://preprod.edtech.com.br/CrescaPlayMD"
 }
