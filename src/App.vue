@@ -43,10 +43,10 @@ export default {
     verifySelectedItem(item) {
       if (this.$route.path == "/rules" && item !== "rules") {
         this.$router.push("/");
-        this.$store.dispatch("setSelectedMenuItem", item);
       } else if (item === "rules") {
         this.$router.push("/rules");
       }
+      this.$store.dispatch("setSelectedMenuItem", item);
     }
   }
 };
