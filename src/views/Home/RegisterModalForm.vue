@@ -2,7 +2,7 @@
   <Modal :showModal="showModal" @close="handleModal()">
     <section class="login" v-if="showLoginCpf">
       <header class="flex justify-between">
-        <span class="title">Login com seu CPF</span>
+        <span class="title">Informe seu CPF</span>
         <a @click="handleModal()">
           <i class="fa fa-times font-25"></i>
         </a>
@@ -27,7 +27,7 @@
         </p>
       </div>
       <footer>
-        <a class="button is-fullwidth is-info" @click="loginCpf()">Confirmar</a>
+        <a class="button is-fullwidth is-info" @click="loginCpf()">Avançar</a>
       </footer>
     </section>
     <section class="passaport" v-if="showPassports">
@@ -72,7 +72,7 @@
         <a>acesse a plataforma com seu CPF</a> e senha cadastrados e siga as instruções
       </p>
       <footer>
-        <a class="button is-fullwidth is-info" @click="savePassport()">Confirmar</a>
+        <a class="button is-fullwidth is-info" @click="savePassport()">Avançar</a>
       </footer>
     </section>
     <section class="user-form" v-if="showUserForm">
@@ -96,7 +96,7 @@
             class="input"
             v-model="user.name.value"
             type="text"
-            placeholder="Fulano de tal"
+            placeholder="Informe seu nome"
             v-bind:class="{'is-danger': user.name.validator.isInvalid}"
           />
           <span
@@ -114,7 +114,7 @@
             class="input"
             v-model="user.email.value"
             type="email"
-            placeholder="exemplo@ex.com"
+            placeholder="Informe seu e-mail (EX: exemplo@ex.com)."
             v-bind:class="{'is-danger': user.email.validator.isInvalid}"
           />
           <span
@@ -236,7 +236,7 @@
         </div>
       </div>
       <footer class="field">
-        <a class="button is-info is-fullwidth" @click="saveUser()">Confirmar</a>
+        <a class="button is-info is-fullwidth" @click="saveUser()">Avançar</a>
       </footer>
     </section>
     <section class="password" v-if="showPassword">
@@ -290,7 +290,7 @@
         </p>
       </div>
       <footer>
-        <a class="button is-info is-fullwidth" @click="savePassword()">Salvar</a>
+        <a class="button is-info is-fullwidth" @click="savePassword()">Avançar</a>
       </footer>
     </section>
     <section class="confirm-datas" v-if="showConfirmDatas">
@@ -327,7 +327,7 @@
             class="input"
             v-model="user.name.value"
             type="text"
-            placeholder="Fulano de tal"
+            placeholder="Informe seu nome"
             v-bind:class="{'is-danger': user.name.validator.isInvalid}"
           />
           <span
@@ -345,7 +345,7 @@
             class="input"
             v-model="user.email.value"
             type="email"
-            placeholder="exemplo@ex.com"
+            placeholder="Informe seu e-mail (EX: exemplo@ex.com)."
             v-bind:class="{'is-danger': user.email.validator.isInvalid}"
           />
           <span
@@ -387,9 +387,10 @@
             v-if="isMobile"
           />
           <Datepicker
-            v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            :inputClass="{'is-danger': user.date.validator.isInvalid, 'input': true}"
             v-model="user.date.value"
-            valuetype="dd/mm/yyyy"
+            format="DD/MM/YYYY"
+            valuetype="format"
             placeholder="dd/mm/yyyy"
             v-if="!isMobile"
           />
@@ -477,16 +478,16 @@
         <strong>Sua participação no sorteio está confirmada e seu acesso a plataforma Cresça Play está liberado :)</strong>
       </div>
       <div class="field">
-        <strong>Agora aproveite e dê um play no seu conhecimento</strong>
+        <strong>Agora aproveite e dê um play no seu conhecimento.</strong>
       </div>
       <div class="field">
-        <strong>Veja seu(s) número(s) da sorte</strong>
+        <strong>Veja seu(s) número(s) da sorte.</strong>
       </div>
       <div class="field" v-for="item in user.numbers" :key="item.number">
         <strong>{{item.number}}</strong>
       </div>
       <footer>
-        <a class="button is-info is-fullwidth" @click="handleModal()">Acesse o Cresça Play</a>
+        <a class="button is-info is-fullwidth" :href="config.CRESCA_URL">Acesse o Cresça Play</a>
       </footer>
     </section>
   </Modal>
@@ -500,6 +501,8 @@ import services from "@/store/services";
 import { formValidator } from "@/utils";
 import { TheMask } from "vue-the-mask";
 import Datepicker from "vue2-datepicker";
+import config from "@/config.json";
+
 let mockId = 1;
 
 export default {
@@ -518,6 +521,7 @@ export default {
   },
   data() {
     return {
+      config,
       showModal: false,
       showLoginCpf: true,
       showPassports: false,
@@ -715,11 +719,11 @@ export default {
       let requiredCondition = "";
       let emailCondition = "";
       let propsArray = [
-        { prop: "name", message: "seu nome" },
-        { prop: "phone", message: "seu celular ou telefone" },
-        { prop: "date", message: "sua data de nascimento" },
-        { prop: "state", message: "seu estado" },
-        { prop: "city", message: "sua cidade" }
+        { prop: "name", message: "seu nome." },
+        { prop: "phone", message: "seu celular ou telefone." },
+        { prop: "date", message: "sua data de nascimento." },
+        { prop: "state", message: "seu estado." },
+        { prop: "city", message: "sua cidade." }
       ];
       Object.keys(this.user).forEach(key => {
         let { value, validator } = this.user[key];
@@ -738,12 +742,12 @@ export default {
       requiredCondition = formValidator(
         this.user.email.value,
         "required",
-        "informe seu email"
+        "informe seu email."
       );
       emailCondition = formValidator(
         this.user.email.value,
         "email",
-        "insira um email válido"
+        "insira um email válido."
       );
       this.user.email.validator = this.checkConditionsToValidator(
         requiredCondition,
@@ -762,8 +766,8 @@ export default {
       let requiredCondition = "";
       let lengthCondition = "";
       let propsArray = [
-        { prop: "password", message: "informe sua senha" },
-        { prop: "confirmPassword", message: "insira a confirmação da senha" }
+        { prop: "password", message: "informe sua senha." },
+        { prop: "confirmPassword", message: "confirme sua senha." }
       ];
       Object.keys(this.user).forEach(key => {
         let { value, validator } = this.user[key];
@@ -777,7 +781,7 @@ export default {
           lengthCondition = formValidator(
             { value, qtd: 8 },
             "length",
-            "insira no mínimo 8 caratéres"
+            "insira no mínimo 8 caratéres."
           );
           validator = this.checkConditionsToValidator(
             requiredCondition,
@@ -805,11 +809,11 @@ export default {
       let requiredCondition = "";
       let emailCondition = "";
       let propsArray = [
-        { prop: "name", message: "seu nome" },
-        { prop: "phone", message: "seu celular ou telefone" },
-        { prop: "date", message: "sua data de nascimento" },
-        { prop: "state", message: "seu estado" },
-        { prop: "city", message: "sua cidade" }
+        { prop: "name", message: "seu nome." },
+        { prop: "phone", message: "seu celular ou telefone." },
+        { prop: "date", message: "sua data de nascimento." },
+        { prop: "state", message: "seu estado." },
+        { prop: "city", message: "sua cidade." }
       ];
       Object.keys(this.user).forEach(key => {
         let { value, validator } = this.user[key];
@@ -828,12 +832,12 @@ export default {
       requiredCondition = formValidator(
         this.user.email.value,
         "required",
-        "informe seu email"
+        "informe seu email."
       );
       emailCondition = formValidator(
         this.user.email.value,
         "email",
-        "insira um email válido"
+        "insira um email válido."
       );
       this.user.email.validator = this.checkConditionsToValidator(
         requiredCondition,
@@ -957,5 +961,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.title {
+  font-size: 1.5rem!important;
 }
 </style>

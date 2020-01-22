@@ -81,7 +81,7 @@ export default {
 <style lang='scss' scoped>
 .rules {
   position: relative;
-  top: 8em;
+  top: 6em;
   .banner {
     width: 100%;
     height: 50%;

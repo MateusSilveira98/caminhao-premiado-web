@@ -195,7 +195,7 @@ export default {
 <style lang='scss' scoped>
 .home {
   position: relative;
-  top: 8em;
+  top: 6em;
   .banner {
     width: 100%;
     background: #ffcc38;

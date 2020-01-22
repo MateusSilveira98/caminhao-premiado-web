@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     verifySelectedItem(item) {
-      if (this.$route.path == "/rules" && item !== "rules") {
+      if (this.$route.path == "/rules" && item !== "rules" && item !== 'register') {
         this.$router.push("/");
       } else if (item === "rules") {
         this.$router.push("/rules");

@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import config from '@/config.json';
+import config from "@/config.json";
 
 export default {
   data() {
@@ -86,41 +86,38 @@ export default {
 nav.navbar {
   background: #0f66be;
   font-weight: bold;
-  padding-bottom: 2.5em;
-  padding-top: 0.5em;
   font-size: 1rem;
   position: fixed;
   width: 100%;
   top: 0;
+  padding: 1em 0;
   .navbar-burger.burger {
     color: white;
   }
   a.navbar-item {
     color: white;
     text-transform: uppercase;
-    margin-top: 2.3em;
     font-weight: normal;
     img {
-      width: 100%;
+      width: 115px;
+      max-height: 60px;
     }
   }
   .navbar-end-items {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: flex-end;
-    width: 50%;
+    width: 40%;
     .button-labeled {
+      position: relative;
       label {
         display: block;
         color: white;
         font-size: 0.8300920204603125rem;
         margin: 0;
         font-weight: normal;
-        position: relative;
-        bottom: 0.3em;
-        &:last-child {
-          margin-bottom: 0.5em;
-        }
+        position: absolute;
+        bottom: 2.7em;
       }
       .button,
       .login-button {
@@ -131,6 +128,7 @@ nav.navbar {
         border-radius: 0;
         font-size: 0.75rem;
         text-transform: uppercase;
+        width: 100%;
       }
       .login-button {
         background: #6db2fc;
