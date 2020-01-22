@@ -125,7 +125,7 @@ export default {
           showLine: true,
           url: "passoApasso_3.png",
           text:
-            "Confirme seus dados e clique em salvar para participar da promoção. Você irá ter acesso a(s) número(s) da sorte* e a plataforma de cursos Cresça Play."
+            "Confirme seus dados e clique em salvar para participar da promoção. Você irá ter acesso ao(s) número(s) da sorte* e a plataforma de cursos Cresça Play."
         },
         {
           id: mockId++,
@@ -141,7 +141,7 @@ export default {
           showLine: false,
           url: "passoApasso_5.png",
           text:
-            "Se você já está cadastrado e deseja inserir mais passaporte, entre com seu CPF em cadastrar passaporte ou insira no seu perfil do aluno na plataforma Cresça Play"
+            "Se você já está cadastrado e deseja inserir mais passaporte, entre com seu CPF em cadastrar passaporte ou insira no seu perfil do aluno na plataforma Cresça Play."
         }
       ],
       informationsSteps: [
