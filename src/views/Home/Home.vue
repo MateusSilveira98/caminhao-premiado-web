@@ -30,13 +30,13 @@
       </div>
       <img src="@/assets/images/cresca_play_logo.png" alt="crescaplaylogo" />
       <p
-        class="font-25 margin-top-3"
+        class="font-25 margin-top-3 margin-bottom-1"
       >Sua plataforma de conteúdos livres, que entrega acesso ilimitado a todo o portfólio*, através de tecnologia 100% online que possibilita uma experiência de aprendizagem digital completa, quando e onde quiser.</p>
-      <p class="font-25 margin-bottom-3">
+      <p class="font-25 margin-bottom-1">
         A sala de aula é onde você quiser e o professor é você quem escolhe.
         Aqui você é o protagonista. Dê um play no seu conhecimento!
       </p>
-      <p class="font-25 has-text-centered margin-bottom-3">
+      <p class="font-25 has-text-centered margin-bottom-1">
         <a :href="config.CRESCA_URL" class="button">Acesse</a>
       </p>
       <div class="informationsSteps">
@@ -50,7 +50,7 @@
         ></Step>
       </div>
       <p
-        class="font-10 margin-top-1"
+        class="font-10 margin-top-3"
       >O tempo de acesso à plataforma para visualização dos e-books, será de até 06 (seis) meses por passaporte cadastrado, contados do primeiro acesso. Assim, este prazo poderá se estender de acordo com a quantidade de passaportes cadastrados</p>
     </div>
     <div class="contacts" ref="contact">
@@ -125,7 +125,7 @@ export default {
           showLine: true,
           url: "passoApasso_3.png",
           text:
-            "Confirme seus dados e clique em salvar para participar da promoção. Você irá ter acesso a(os) número(s) da sorte* e a plataforma de cursos Cresça Play."
+            "Confirme seus dados e clique em salvar para participar da promoção. Você irá ter acesso a(s) número(s) da sorte* e a plataforma de cursos Cresça Play."
         },
         {
           id: mockId++,
@@ -141,7 +141,7 @@ export default {
           showLine: false,
           url: "passoApasso_5.png",
           text:
-            "Se você já está cadastrado e deseja inserir mais passaporte, entre com seu cpf em cadastrar passaporte ou insira no seu perfil do aluno na plataforma Cresça Play"
+            "Se você já está cadastrado e deseja inserir mais passaporte, entre com seu CPF em cadastrar passaporte ou insira no seu perfil do aluno na plataforma Cresça Play"
         }
       ],
       informationsSteps: [
@@ -185,6 +185,9 @@ export default {
         window.scrollTo(0, top);
       }
     }
+  },
+  mounted() {
+    if (this.menuItem !== "register" && this.menuItem !== "rules") this.goToItem(this.menuItem);
   }
 };
 </script>

@@ -41,7 +41,6 @@
       <div class="navbar-end-items">
         <div class="navbar-item">
           <div class="button-labeled">
-            <label>Primeiro Acesso</label>
             <a
               class="button"
               @click="selectMenu('register'); isBurgerActive = !isBurgerActive"
@@ -117,6 +116,8 @@ nav.navbar {
         font-size: 0.8300920204603125rem;
         margin: 0;
         font-weight: normal;
+        position: relative;
+        bottom: 0.3em;
         &:last-child {
           margin-bottom: 0.5em;
         }
