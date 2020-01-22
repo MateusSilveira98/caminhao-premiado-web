@@ -144,7 +144,7 @@ nav.navbar {
 }
 @media (min-width: 320px) and (max-width: 913px) {
   nav.navbar {
-    padding-bottom: 0;
+    padding: 0;
     .navbar-menu.is-active {
       background: #0f66be;
       .navbar-start-items,
@@ -161,13 +161,17 @@ nav.navbar {
         color: #0f66be !important;
       }
       img {
-        width: 100%;
+        width: 60px;
+        max-height: 1.75rem;
       }
     }
     .navbar-end-items {
       width: 100%;
       .button {
         width: 100%;
+        &:first-child {
+          margin-bottom: 1em;
+        }
       }
     }
     .navbar-start-items {
