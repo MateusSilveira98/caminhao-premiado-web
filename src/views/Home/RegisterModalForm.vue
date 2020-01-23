@@ -96,6 +96,7 @@
             class="input"
             v-model="user.name.value"
             type="text"
+            maxlength="80"
             placeholder="Informe seu nome"
             v-bind:class="{'is-danger': user.name.validator.isInvalid}"
           />
@@ -108,12 +109,13 @@
       <div class="field">
         <p class="control">
           <label class="label">
-            <span class="has-text-danger">*</span>Email
+            <span class="has-text-danger">*</span>E-mail
           </label>
           <input
             class="input"
             v-model="user.email.value"
             type="email"
+            maxlength="60"
             placeholder="Informe seu e-mail (EX: exemplo@ex.com)."
             v-bind:class="{'is-danger': user.email.validator.isInvalid}"
           />
@@ -161,6 +163,7 @@
             format="DD/MM/YYYY"
             valuetype="format"
             placeholder="dd/mm/yyyy"
+            :editable="false"
             v-if="!isMobile"
           />
           <span
@@ -261,7 +264,7 @@
             v-model="user.password.value"
             type="password"
             minlength="8"
-            placeholder="crie uma senha com o mínimo de 8 caractéres"
+            placeholder="crie uma senha com o mínimo de 8 caracteres"
             v-bind:class="{'is-danger': user.password.validator.isInvalid}"
           />
           <span
@@ -327,6 +330,7 @@
             class="input"
             v-model="user.name.value"
             type="text"
+            maxlength="80"
             placeholder="Informe seu nome"
             v-bind:class="{'is-danger': user.name.validator.isInvalid}"
           />
@@ -339,12 +343,13 @@
       <div class="field">
         <p class="control">
           <label class="label">
-            <span class="has-text-danger">*</span>Email
+            <span class="has-text-danger">*</span>E-mail
           </label>
           <input
             class="input"
             v-model="user.email.value"
             type="email"
+            maxlength="60"
             placeholder="Informe seu e-mail (EX: exemplo@ex.com)."
             v-bind:class="{'is-danger': user.email.validator.isInvalid}"
           />
@@ -643,17 +648,21 @@ export default {
     checkConditionsToValidator(
       requiredCondition = null,
       lengthCondition = null,
-      emailCondition = null
+      emailCondition = null,
+      nameCondition = null
     ) {
       return {
         isInvalid:
           (requiredCondition && requiredCondition !== "isValid") ||
           (lengthCondition && lengthCondition !== "isValid") ||
-          (emailCondition && emailCondition !== "isValid"),
+          (emailCondition && emailCondition !== "isValid") ||
+          (nameCondition && nameCondition !== "isValid"),
         message:
           requiredCondition === "isValid"
             ? lengthCondition === "isValid"
-              ? emailCondition
+              ? emailCondition === "isValid"
+                ? nameCondition
+                : emailCondition
               : lengthCondition
             : requiredCondition
       };
@@ -663,7 +672,7 @@ export default {
       let requiredCondition = "";
       let lengthCondition = "";
       let { value, validator } = this.user.cpf;
-      requiredCondition = formValidator(value, "required", "informe seu cpf.");
+      requiredCondition = formValidator(value, "required", "informe seu CPF.");
       lengthCondition = formValidator(
         { value, qtd: 11 },
         "length",
@@ -715,48 +724,7 @@ export default {
       }
     },
     saveUser() {
-      let isValidArray = [];
-      let requiredCondition = "";
-      let emailCondition = "";
-      let propsArray = [
-        { prop: "name", message: "seu nome." },
-        { prop: "phone", message: "seu celular ou telefone." },
-        { prop: "date", message: "sua data de nascimento." },
-        { prop: "state", message: "seu estado." },
-        { prop: "city", message: "sua cidade." }
-      ];
-      Object.keys(this.user).forEach(key => {
-        let { value, validator } = this.user[key];
-        let valuePropName = propsArray.find(p => p.prop === key);
-        if (valuePropName) {
-          requiredCondition = formValidator(
-            value,
-            "required",
-            `informe ${valuePropName.message}`
-          );
-          validator = this.checkConditionsToValidator(requiredCondition);
-          isValidArray.push(!validator.isInvalid);
-          this.user[key].validator = validator;
-        }
-      });
-      requiredCondition = formValidator(
-        this.user.email.value,
-        "required",
-        "informe seu email."
-      );
-      emailCondition = formValidator(
-        this.user.email.value,
-        "email",
-        "insira um email válido."
-      );
-      this.user.email.validator = this.checkConditionsToValidator(
-        requiredCondition,
-        "isValid",
-        emailCondition
-      );
-      if (this.user.email.validator.isInvalid)
-        isValidArray.push(!this.user.email.validator.isInvalid);
-      if (isValidArray.filter(value => !value).length === 0) {
+      if (this.validateUserForm()) {
         this.showUserForm = false;
         this.showPassword = true;
       }
@@ -781,7 +749,7 @@ export default {
           lengthCondition = formValidator(
             { value, qtd: 8 },
             "length",
-            "insira no mínimo 8 caratéres."
+            "insira no mínimo 8 caracteres."
           );
           validator = this.checkConditionsToValidator(
             requiredCondition,
@@ -805,48 +773,7 @@ export default {
       }
     },
     confirm() {
-      let isValidArray = [];
-      let requiredCondition = "";
-      let emailCondition = "";
-      let propsArray = [
-        { prop: "name", message: "seu nome." },
-        { prop: "phone", message: "seu celular ou telefone." },
-        { prop: "date", message: "sua data de nascimento." },
-        { prop: "state", message: "seu estado." },
-        { prop: "city", message: "sua cidade." }
-      ];
-      Object.keys(this.user).forEach(key => {
-        let { value, validator } = this.user[key];
-        let valuePropName = propsArray.find(p => p.prop === key);
-        if (valuePropName) {
-          requiredCondition = formValidator(
-            value,
-            "required",
-            `informe ${valuePropName.message}`
-          );
-          validator = this.checkConditionsToValidator(requiredCondition);
-          isValidArray.push(!validator.isInvalid);
-          this.user[key].validator = validator;
-        }
-      });
-      requiredCondition = formValidator(
-        this.user.email.value,
-        "required",
-        "informe seu email."
-      );
-      emailCondition = formValidator(
-        this.user.email.value,
-        "email",
-        "insira um email válido."
-      );
-      this.user.email.validator = this.checkConditionsToValidator(
-        requiredCondition,
-        "isValid",
-        emailCondition
-      );
-      if (this.user.email.validator.isInvalid)
-        isValidArray.push(!this.user.email.validator.isInvalid);
-      if (isValidArray.filter(value => !value).length === 0) {
+      if (this.validateUserForm()) {
         this.showConfirmDatas = false;
         this.showNumber = true;
       }
@@ -940,6 +867,68 @@ export default {
           }
         }
       };
+    },
+    validateUserForm() {
+      let isValidArray = [];
+      let requiredCondition = "";
+      let emailCondition = "";
+      let nameCondition = "";
+      let propsArray = [
+        { prop: "phone", message: "seu celular ou telefone." },
+        { prop: "date", message: "sua data de nascimento." },
+        { prop: "state", message: "seu estado." },
+        { prop: "city", message: "sua cidade." }
+      ];
+      Object.keys(this.user).forEach(key => {
+        let { value, validator } = this.user[key];
+        let valuePropName = propsArray.find(p => p.prop === key);
+        if (valuePropName) {
+          requiredCondition = formValidator(
+            value,
+            "required",
+            `informe ${valuePropName.message}`
+          );
+          validator = this.checkConditionsToValidator(requiredCondition);
+          isValidArray.push(!validator.isInvalid);
+          this.user[key].validator = validator;
+        }
+      });
+      requiredCondition = formValidator(
+        this.user.email.value,
+        "required",
+        "informe seu e-mail."
+      );
+      emailCondition = formValidator(
+        this.user.email.value,
+        "email",
+        "insira um e-mail válido."
+      );
+      this.user.email.validator = this.checkConditionsToValidator(
+        requiredCondition,
+        "isValid",
+        emailCondition
+      );
+      if (this.user.email.validator.isInvalid)
+        isValidArray.push(!this.user.email.validator.isInvalid);
+      requiredCondition = formValidator(
+        this.user.name.value,
+        "required",
+        "informe seu nome."
+      );
+      nameCondition = formValidator(
+        this.user.name.value,
+        "name",
+        "insira um nome e um sobrenome."
+      );
+      this.user.name.validator = this.checkConditionsToValidator(
+        requiredCondition,
+        "isValid",
+        "isValid",
+        nameCondition
+      );
+      if (this.user.name.validator.isInvalid)
+        isValidArray.push(!this.user.name.validator.isInvalid);
+      return isValidArray.filter(value => !value).length === 0;
     }
   },
   async mounted() {
@@ -963,6 +952,6 @@ export default {
   justify-content: space-between;
 }
 .title {
-  font-size: 1.5rem!important;
+  font-size: 1.5rem !important;
 }
 </style>

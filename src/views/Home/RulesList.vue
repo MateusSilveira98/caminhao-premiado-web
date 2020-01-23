@@ -105,7 +105,7 @@ export default {
     }
   }
 }
-@media (min-width: 750px) and (max-width: 1023px) {
+@media (min-width: 750px) and (max-width: 1100px) {
   .image {
     img {
       width: 75% !important;

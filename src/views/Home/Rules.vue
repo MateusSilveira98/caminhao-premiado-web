@@ -74,6 +74,10 @@ export default {
     return {
       ruleList
     };
+  },
+  mounted() {
+    window.scroll({ behavior: "smooth" });
+    window.scrollTo(0, top);
   }
 };
 </script>
@@ -105,7 +109,7 @@ export default {
     position: relative;
   }
 }
-@media (min-width: 320px) and (max-width: 913px) {
+@media (min-width: 320px) and (max-width: 1100px) {
   .rules {
     top: 3em;
     .contacts {

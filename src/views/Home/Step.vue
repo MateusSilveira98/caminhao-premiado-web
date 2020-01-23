@@ -71,7 +71,7 @@ export default {
     }
   }
 }
-@media (min-width: 320px) and (max-width: 913px) {
+@media (min-width: 320px) and (max-width: 1100px) {
   .step {
     display: flex;
     height: 7em;

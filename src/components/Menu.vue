@@ -142,7 +142,7 @@ nav.navbar {
     width: 100%;
   }
 }
-@media (min-width: 320px) and (max-width: 913px) {
+@media (min-width: 320px) and (max-width: 1100px) {
   nav.navbar {
     padding: 0;
     .navbar-menu.is-active {
