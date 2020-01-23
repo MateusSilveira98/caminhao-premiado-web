@@ -44,6 +44,14 @@ const formValidator = (value, rule, message) => {
         return !regex.test(String(payload).toLowerCase());
       },
       message
+    },
+    {
+      name: 'name',
+      rule: (payload) => {
+        let regex = /^[a-zA-Z ]{2,30}$/;
+        return !regex.test(String(payload));
+      },
+      message
     }
   ];
   let selectedRule = rules.find(r => rule === r.name);
