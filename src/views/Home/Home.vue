@@ -70,7 +70,7 @@
       </div>
       <p
         class="font-10 margin-top-3"
-      >Sorteio(s) vinculado à Título de Capitalização, modalidade Incentivo, emitido pela ZURICH BRASIL CAPITALIZAÇÃO S/A., CNPJ 17.266.009/0001-41 e Processo SUSEP n° 15414.901582/2018-96. Período de vigência desta Promoção Comercial: 01/02/2020 a 31/07/2020. A aprovação deste título pela SUSEP não implica, por parte da Autarquia, em incentivo ou recomendação a sua aquisição, representando exclusivamente, sua adequação as normas em vigor. O titular sempre terá direito ao recebimento em dinheiro se assim o desejar. Consulte o Regulamento completo e as Condições Gerais do Título de Capitalização desta Promoção Comercial no site https://www.zurich.com.br/pt-br/empresariais/capitalizacao.</p>
+      >Sorteio(s) vinculado à Título de Capitalização, modalidade Incentivo, emitido pela ZURICH BRASIL CAPITALIZAÇÃO S/A., CNPJ 17.266.009/0001-41 e Processo SUSEP n° 15414.901582/2018-96. Período de vigência desta Promoção Comercial: 01/02/2020 a 31/07/2020. A aprovação deste título pela SUSEP não implica, por parte da Autarquia, em incentivo ou recomendação a sua aquisição, representando exclusivamente, sua adequação as normas em vigor. O titular sempre terá direito ao recebimento em dinheiro se assim o desejar. É proibido a venda de Título de Capitalização para menores de dezesseis anos. Antes de contratar, consulte previamente as condições gerais. Central de Atendimento Zurich: SAC: 0800 284 4848 / Deficiente Auditivo: 0800 275 8585 / Ouvidoria: 0800 770 1061. Consulte o Regulamento completo e as Condições Gerais do Título de Capitalização desta Promoção Comercial no site https://www.zurich.com.br/pt-br/seguros-empresariais/capitalizacao.</p>
       <div class="font-10 margin-top-3">
         <img src="@/assets/images/cresca_play_icon.png" alt="crescalogo" />
         <p class="margin-top-1">&copy;CRESÇA PLAY 2020 - Todos os direitos reservados</p>
@@ -84,7 +84,7 @@
 import Step from "./Step.vue";
 import RegisterModalForm from "./RegisterModalForm.vue";
 import { mapState } from "vuex";
-import config from '@/config.json';
+import config from "@/config.json";
 let mockId = 1;
 export default {
   components: {
@@ -187,7 +187,8 @@ export default {
     }
   },
   mounted() {
-    if (this.menuItem !== "register" && this.menuItem !== "rules") this.goToItem(this.menuItem);
+    if (this.menuItem !== "register" && this.menuItem !== "rules")
+      this.goToItem(this.menuItem);
   }
 };
 </script>

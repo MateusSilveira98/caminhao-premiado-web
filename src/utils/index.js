@@ -26,6 +26,8 @@ const callback = (commit, response) => {
   }
 }
 const formValidator = (value, rule, message) => {
+  const cpfValidator = require('validar-cpf');
+
   const rules = [
     {
       name: 'required',
@@ -51,6 +53,11 @@ const formValidator = (value, rule, message) => {
         let regex = /^[a-zA-Z ]{2,30}$/;
         return !regex.test(String(payload));
       },
+      message
+    },
+    {
+      name: 'cpf',
+      rule: (payload) => !cpfValidator(payload),
       message
     }
   ];

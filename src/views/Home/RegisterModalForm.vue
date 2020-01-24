@@ -68,14 +68,16 @@
         v-if="user.passports.length < 5"
       >Adicionar mais um passaporte</a>
       <p class="font-10 margin-top-4 margin-bottom-4">
-        Caso já tenha feito o cadastro e deseja cadastrar mais códigos para concorrer a promoção,
-        <a>acesse a plataforma com seu CPF</a> e senha cadastrados e siga as instruções
+        Caso
+        <strong>já esteja cadastrado</strong> e deseja inserir
+        <strong>mais passaportes</strong> para concorrer à promoção, insira o seu CPF e clique em
+        <strong>adicionar mais passaportes.</strong> Você também pode consulta-los no “Meu Perfil” acessando a plataforma Cresça Play.
       </p>
       <footer>
         <a class="button is-fullwidth is-info" @click="savePassport()">Avançar</a>
       </footer>
     </section>
-    <section class="user-form" v-if="showUserForm">
+    <section class="user-form" v-if="showUserForm && !userToSend.Idusuario">
       <header class="flex justify-between aling-items-center margin-bottom-1">
         <div class="flex align-item-center">
           <a class="margin-right-1 font-20" @click="showPassports = true; showUserForm = false;">
@@ -178,15 +180,15 @@
         </label>
         <div class="control flex align-items-center justify-between">
           <label class="radio flex align-items-center">
-            <input type="radio" name="gender" value="masculino" v-model="user.gender" />
+            <input type="radio" name="gender" value="M" v-model="user.gender" />
             <span class="margin-left-1">masculino</span>
           </label>
           <label class="radio flex align-items-center">
-            <input type="radio" name="gender" value="feminino" v-model="user.gender" />
+            <input type="radio" name="gender" value="F" v-model="user.gender" />
             <span class="margin-left-1">feminino</span>
           </label>
           <label class="radio flex align-items-center">
-            <input type="radio" name="gender" value="outro" v-model="user.gender" />
+            <input type="radio" name="gender" value="O" v-model="user.gender" />
             <span class="margin-left-1">prefiro não informar</span>
           </label>
         </div>
@@ -242,7 +244,7 @@
         <a class="button is-info is-fullwidth" @click="saveUser()">Avançar</a>
       </footer>
     </section>
-    <section class="password" v-if="showPassword">
+    <section class="password" v-if="showPassword && !userToSend.Idusuario">
       <header class="flex justify-between aling-items-center margin-bottom-1">
         <div class="flex align-item-center">
           <a class="margin-right-1 font-20" @click="showUserForm = true; showPassword = false;">
@@ -340,137 +342,139 @@
           >{{user.name.validator.message}}</span>
         </p>
       </div>
-      <div class="field">
-        <p class="control">
-          <label class="label">
-            <span class="has-text-danger">*</span>E-mail
-          </label>
-          <input
-            class="input"
-            v-model="user.email.value"
-            type="email"
-            maxlength="60"
-            placeholder="Informe seu e-mail (EX: exemplo@ex.com)."
-            v-bind:class="{'is-danger': user.email.validator.isInvalid}"
-          />
-          <span
-            class="has-text-danger"
-            v-if="user.email.validator.isInvalid"
-          >{{user.email.validator.message}}</span>
-        </p>
-      </div>
-      <div class="field">
-        <p class="control">
-          <label class="label">
-            <span class="has-text-danger">*</span>Celular/Telefone
-          </label>
-          <TheMask
-            :mask="['(##) ####-####', '(##) #####-####']"
-            type="tel"
-            v-model="user.phone.value"
-            placeholder="(00) 9 0000-0000 ou (00) 0000-0000"
-            class="input"
-            v-bind:class="{'is-danger': user.phone.validator.isInvalid}"
-          />
-          <span
-            class="has-text-danger"
-            v-if="user.phone.validator.isInvalid"
-          >{{user.phone.validator.message}}</span>
-        </p>
-      </div>
-      <div class="field">
-        <p class="control">
-          <label class="label">
-            <span class="has-text-danger">*</span>Data de nascimento
-          </label>
-          <input
-            class="input"
-            v-model="user.date.value"
-            type="date"
-            placeholder="dd/mm/yyyy"
-            v-bind:class="{'is-danger': user.date.validator.isInvalid}"
-            v-if="isMobile"
-          />
-          <Datepicker
-            :inputClass="{'is-danger': user.date.validator.isInvalid, 'input': true}"
-            v-model="user.date.value"
-            format="DD/MM/YYYY"
-            valuetype="format"
-            placeholder="dd/mm/yyyy"
-            v-if="!isMobile"
-          />
-          <span
-            class="has-text-danger"
-            v-if="user.date.validator.isInvalid"
-          >{{user.date.validator.message}}</span>
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">
-          <span class="has-text-danger">*</span>Sexo
-        </label>
-        <div class="control flex align-items-center justify-between">
-          <label class="radio flex align-items-center">
-            <input type="radio" name="gender" value="masculino" v-model="user.gender" />
-            <span class="margin-left-1">masculino</span>
-          </label>
-          <label class="radio flex align-items-center">
-            <input type="radio" name="gender" value="feminino" v-model="user.gender" />
-            <span class="margin-left-1">feminino</span>
-          </label>
-          <label class="radio flex align-items-center">
-            <input type="radio" name="gender" value="outro" v-model="user.gender" />
-            <span class="margin-left-1">prefiro não informar</span>
-          </label>
-        </div>
-      </div>
-      <div class="field">
-        <div class="columns">
-          <div class="column">
+      <template v-if="!userToSend.Idusuario">
+        <div class="field">
+          <p class="control">
             <label class="label">
-              <span class="has-text-danger">*</span>Estado
+              <span class="has-text-danger">*</span>E-mail
             </label>
-            <div class="select is-fullwidth">
-              <select
-                class="is-fullwidth"
-                v-model="user.state.value"
-                @change="getCitiesByState(user.state.value)"
-                v-bind:class="{'is-danger': user.state.validator.isInvalid}"
-              >
-                <option selected disabled>Selecione seu estado</option>
-                <option
-                  v-for="state in states"
-                  :key="state.id"
-                  :value="state"
-                >{{state.sigla}} - {{state.nome}}</option>
-              </select>
-            </div>
+            <input
+              class="input"
+              v-model="user.email.value"
+              type="email"
+              maxlength="60"
+              placeholder="Informe seu e-mail (EX: exemplo@ex.com)."
+              v-bind:class="{'is-danger': user.email.validator.isInvalid}"
+            />
             <span
               class="has-text-danger"
-              v-if="user.state.validator.isInvalid"
-            >{{user.state.validator.message}}</span>
-          </div>
-          <div class="column">
+              v-if="user.email.validator.isInvalid"
+            >{{user.email.validator.message}}</span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
             <label class="label">
-              <span class="has-text-danger">*</span>Cidade
+              <span class="has-text-danger">*</span>Celular/Telefone
             </label>
-            <div class="select is-fullwidth">
-              <select
-                class="is-fullwidth"
-                v-model="user.city.value"
-                v-bind:class="{'is-danger': user.city.validator.isInvalid}"
-              >
-                <option selected disabled>Selecione sua cidade</option>
-                <option v-for="city in cities" :key="city.id" :value="city.nome">{{city.nome}}</option>
-              </select>
-            </div>
+            <TheMask
+              :mask="['(##) ####-####', '(##) #####-####']"
+              type="tel"
+              v-model="user.phone.value"
+              placeholder="(00) 9 0000-0000 ou (00) 0000-0000"
+              class="input"
+              v-bind:class="{'is-danger': user.phone.validator.isInvalid}"
+            />
             <span
               class="has-text-danger"
-              v-if="user.city.validator.isInvalid"
-            >{{user.city.validator.message}}</span>
+              v-if="user.phone.validator.isInvalid"
+            >{{user.phone.validator.message}}</span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control">
+            <label class="label">
+              <span class="has-text-danger">*</span>Data de nascimento
+            </label>
+            <input
+              class="input"
+              v-model="user.date.value"
+              type="date"
+              placeholder="dd/mm/yyyy"
+              v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+              v-if="isMobile"
+            />
+            <Datepicker
+              :inputClass="{'is-danger': user.date.validator.isInvalid, 'input': true}"
+              v-model="user.date.value"
+              format="DD/MM/YYYY"
+              valuetype="format"
+              placeholder="dd/mm/yyyy"
+              v-if="!isMobile"
+            />
+            <span
+              class="has-text-danger"
+              v-if="user.date.validator.isInvalid"
+            >{{user.date.validator.message}}</span>
+          </p>
+        </div>
+        <div class="field">
+          <label class="label">
+            <span class="has-text-danger">*</span>Sexo
+          </label>
+          <div class="control flex align-items-center justify-between">
+            <label class="radio flex align-items-center">
+              <input type="radio" name="gender" value="M" v-model="user.gender" />
+              <span class="margin-left-1">masculino</span>
+            </label>
+            <label class="radio flex align-items-center">
+              <input type="radio" name="gender" value="F" v-model="user.gender" />
+              <span class="margin-left-1">feminino</span>
+            </label>
+            <label class="radio flex align-items-center">
+              <input type="radio" name="gender" value="O" v-model="user.gender" />
+              <span class="margin-left-1">prefiro não informar</span>
+            </label>
           </div>
         </div>
-      </div>
+        <div class="field">
+          <div class="columns">
+            <div class="column">
+              <label class="label">
+                <span class="has-text-danger">*</span>Estado
+              </label>
+              <div class="select is-fullwidth">
+                <select
+                  class="is-fullwidth"
+                  v-model="user.state.value"
+                  @change="getCitiesByState(user.state.value)"
+                  v-bind:class="{'is-danger': user.state.validator.isInvalid}"
+                >
+                  <option selected disabled>Selecione seu estado</option>
+                  <option
+                    v-for="state in states"
+                    :key="state.id"
+                    :value="state"
+                  >{{state.sigla}} - {{state.nome}}</option>
+                </select>
+              </div>
+              <span
+                class="has-text-danger"
+                v-if="user.state.validator.isInvalid"
+              >{{user.state.validator.message}}</span>
+            </div>
+            <div class="column">
+              <label class="label">
+                <span class="has-text-danger">*</span>Cidade
+              </label>
+              <div class="select is-fullwidth">
+                <select
+                  class="is-fullwidth"
+                  v-model="user.city.value"
+                  v-bind:class="{'is-danger': user.city.validator.isInvalid}"
+                >
+                  <option selected disabled>Selecione sua cidade</option>
+                  <option v-for="city in cities" :key="city.id" :value="city.nome">{{city.nome}}</option>
+                </select>
+              </div>
+              <span
+                class="has-text-danger"
+                v-if="user.city.validator.isInvalid"
+              >{{user.city.validator.message}}</span>
+            </div>
+          </div>
+        </div>
+      </template>
       <footer>
         <a class="button is-info is-fullwidth" @click="confirm()">Salvar</a>
       </footer>
@@ -492,7 +496,10 @@
         <strong>{{item.number}}</strong>
       </div>
       <footer>
-        <a class="button is-info is-fullwidth" :href="config.CRESCA_URL">Acesse o Cresça Play</a>
+        <a
+          class="button is-info is-fullwidth"
+          @click="redirectTo(config.CRESCA_URL)"
+        >Acesse o Cresça Play</a>
       </footer>
     </section>
   </Modal>
@@ -517,11 +524,18 @@ export default {
     Datepicker
   },
   computed: {
-    ...mapState(["menuItem"])
+    ...mapState({
+      selectedUser: state => state.Home.selectedUser,
+      menuItem: state => state.menuItem,
+      isSuccess: state => state.Home.isSuccess
+    })
   },
   watch: {
     menuItem(value) {
       if (value === "register") this.handleModal();
+    },
+    selectedUser(value) {
+      this.userToSend = value;
     }
   },
   data() {
@@ -537,6 +551,20 @@ export default {
       isMobile: false,
       states: [],
       cities: [],
+      userToSend: {
+        Idusuario: 0,
+        Nome: "",
+        Email: "",
+        Login: "",
+        Senha: "",
+        sexo: "O",
+        DataNascimento: "",
+        TelefoneCelular: "",
+        UF: "",
+        Cidade: "",
+        Vouchers: [],
+        Idsistema: 1383
+      },
       user: {
         passports: [
           {
@@ -548,7 +576,7 @@ export default {
             }
           }
         ],
-        gender: "outro",
+        gender: "O",
         name: {
           value: null,
           validator: {
@@ -649,28 +677,33 @@ export default {
       requiredCondition = null,
       lengthCondition = null,
       emailCondition = null,
-      nameCondition = null
+      nameCondition = null,
+      cpfCondition = null
     ) {
       return {
         isInvalid:
           (requiredCondition && requiredCondition !== "isValid") ||
           (lengthCondition && lengthCondition !== "isValid") ||
           (emailCondition && emailCondition !== "isValid") ||
-          (nameCondition && nameCondition !== "isValid"),
+          (nameCondition && nameCondition !== "isValid") ||
+          (cpfCondition && cpfCondition !== "isValid"),
         message:
           requiredCondition === "isValid"
             ? lengthCondition === "isValid"
               ? emailCondition === "isValid"
-                ? nameCondition
+                ? nameCondition === "isValid"
+                  ? cpfCondition
+                  : nameCondition
                 : emailCondition
               : lengthCondition
             : requiredCondition
       };
     },
-    loginCpf() {
+    async loginCpf() {
       let isValidArray = [];
       let requiredCondition = "";
       let lengthCondition = "";
+      let cpfCondition = "";
       let { value, validator } = this.user.cpf;
       requiredCondition = formValidator(value, "required", "informe seu CPF.");
       lengthCondition = formValidator(
@@ -678,12 +711,17 @@ export default {
         "length",
         "insira no mínimo 11 números."
       );
+      cpfCondition = formValidator(value, "cpf", "CPF inválido.");
       validator = this.checkConditionsToValidator(
         requiredCondition,
-        lengthCondition
+        lengthCondition,
+        "isValid",
+        "isValid",
+        cpfCondition
       );
       this.user.cpf.validator = validator;
       if (!this.user.cpf.validator.isInvalid) {
+        await this.$store.dispatch("getUserByCPF", this.user.cpf.value);
         this.showLoginCpf = false;
         this.showPassports = true;
       }
@@ -719,7 +757,19 @@ export default {
             passport: this.user.passports[index].value
           });
         }
-        this.showUserForm = true;
+
+        if (!this.userToSend.Idusuario) {
+          this.showUserForm = true;
+        } else {
+          this.user.name.value = this.userToSend.Nome;
+          this.user.password.value = this.userToSend.Senha;
+          this.user.gender = this.userToSend.sexo;
+          this.user.date.value = this.userToSend.DataNascimento;
+          this.user.phone.value = this.userToSend.TelefoneCelular;
+          this.user.state.value = this.userToSend.UF;
+          this.user.city.value = this.userToSend.Cidade;
+          this.showConfirmDatas = true;
+        }
         this.showPassports = false;
       }
     },
@@ -772,10 +822,24 @@ export default {
         this.showConfirmDatas = true;
       }
     },
-    confirm() {
+    async confirm() {
       if (this.validateUserForm()) {
+        this.userToSend.Vouchers = this.user.passports.map(item => item.value);
+        this.userToSend.Nome = this.user.name.value;
+        this.userToSend.Senha = this.user.password.value;
+        this.userToSend.sexo = this.user.gender;
+        this.userToSend.DataNascimento = this.user.date.value;
+        this.userToSend.TelefoneCelular = this.user.phone.value;
+        this.userToSend.UF = this.user.state.value;
+        this.userToSend.Cidade = this.user.city.value;
+        await this.$store.dispatch("saveUser", this.userToSend);
+        if (this.isSuccess) {
+          this.showNumber = true;
+        } else {
+          this.handleModal();
+          alert("ERROU!!");
+        }
         this.showConfirmDatas = false;
-        this.showNumber = true;
       }
     },
     async getCitiesByState(state) {
@@ -879,37 +943,39 @@ export default {
         { prop: "state", message: "seu estado." },
         { prop: "city", message: "sua cidade." }
       ];
-      Object.keys(this.user).forEach(key => {
-        let { value, validator } = this.user[key];
-        let valuePropName = propsArray.find(p => p.prop === key);
-        if (valuePropName) {
-          requiredCondition = formValidator(
-            value,
-            "required",
-            `informe ${valuePropName.message}`
-          );
-          validator = this.checkConditionsToValidator(requiredCondition);
-          isValidArray.push(!validator.isInvalid);
-          this.user[key].validator = validator;
-        }
-      });
-      requiredCondition = formValidator(
-        this.user.email.value,
-        "required",
-        "informe seu e-mail."
-      );
-      emailCondition = formValidator(
-        this.user.email.value,
-        "email",
-        "insira um e-mail válido."
-      );
-      this.user.email.validator = this.checkConditionsToValidator(
-        requiredCondition,
-        "isValid",
-        emailCondition
-      );
-      if (this.user.email.validator.isInvalid)
-        isValidArray.push(!this.user.email.validator.isInvalid);
+      if (!this.userToSend.Idusuario) {
+        Object.keys(this.user).forEach(key => {
+          let { value, validator } = this.user[key];
+          let valuePropName = propsArray.find(p => p.prop === key);
+          if (valuePropName) {
+            requiredCondition = formValidator(
+              value,
+              "required",
+              `informe ${valuePropName.message}`
+            );
+            validator = this.checkConditionsToValidator(requiredCondition);
+            isValidArray.push(!validator.isInvalid);
+            this.user[key].validator = validator;
+          }
+        });
+        requiredCondition = formValidator(
+          this.user.email.value,
+          "required",
+          "informe seu e-mail."
+        );
+        emailCondition = formValidator(
+          this.user.email.value,
+          "email",
+          "insira um e-mail válido."
+        );
+        this.user.email.validator = this.checkConditionsToValidator(
+          requiredCondition,
+          "isValid",
+          emailCondition
+        );
+        if (this.user.email.validator.isInvalid)
+          isValidArray.push(!this.user.email.validator.isInvalid);
+      }
       requiredCondition = formValidator(
         this.user.name.value,
         "required",
@@ -929,6 +995,9 @@ export default {
       if (this.user.name.validator.isInvalid)
         isValidArray.push(!this.user.name.validator.isInvalid);
       return isValidArray.filter(value => !value).length === 0;
+    },
+    redirectTo(url) {
+      window.location.href = url;
     }
   },
   async mounted() {
