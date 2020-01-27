@@ -142,9 +142,10 @@ nav.navbar {
     width: 100%;
   }
 }
-@media (min-width: 320px) and (max-width: 1100px) {
+@media screen and (max-width: 1295px) {
   nav.navbar {
     padding: 0;
+    min-height: 3.25rem;
     .navbar-menu.is-active {
       background: #0f66be;
       .navbar-start-items,
@@ -154,12 +155,9 @@ nav.navbar {
         margin: 0;
       }
     }
-    a.navbar-item {
+    a.navbar-item,
+    .navbar-item {
       margin-top: 0;
-      &:hover {
-        background: #ffcc38 !important;
-        color: #0f66be !important;
-      }
       img {
         width: 60px;
         max-height: 1.75rem;
@@ -178,6 +176,37 @@ nav.navbar {
       width: 100%;
       margin: 0;
     }
+  }
+  .navbar-brand {
+    width: 100%;
+  }
+  .navbar-item,
+  .navbar-link {
+    align-items: center !important;
+    display: flex !important;
+  }
+  .navbar-burger {
+    display: block !important;
+    margin-left: auto !important;
+    position: relative !important;
+  }
+  .navbar-menu {
+    display: none !important;
+  }
+  .navbar-menu.is-active {
+    display: block !important;
+    position: absolute;
+    width: 100%;
+    top: 3em;
+  }
+  nav.navbar.is-transparent a.navbar-item:focus,
+  nav.navbar.is-transparent a.navbar-item:hover,
+  nav.navbar.is-transparent a.navbar-item.is-active,
+  nav.navbar.is-transparent .navbar-link:focus,
+  nav.navbar.is-transparent .navbar-link:hover,
+  nav.navbar.is-transparent .navbar-link.is-active {
+    background: #ffcc38 !important;
+    color: #0f66be !important;
   }
 }
 </style>

@@ -71,17 +71,22 @@ export default {
     }
   }
 }
-@media (min-width: 320px) and (max-width: 1100px) {
+@media (min-width: 320px) and (max-width: 1295px) {
   .step {
     display: flex;
     height: 7em;
     text-align: start;
     align-items: center;
     height: 7em;
+    p {
+      font-size: 0.8300920204603125rem;
+      width: 100%;
+      margin: 0 auto;
+      margin-left: 1em;
+    }
     img {
       width: 65px;
       height: 65px;
-      margin-right: 1em;
     }
     .line {
       position: absolute;

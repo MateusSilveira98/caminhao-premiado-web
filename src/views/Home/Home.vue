@@ -254,7 +254,7 @@ export default {
     position: relative;
   }
 }
-@media (min-width: 320px) and (max-width: 1100px) {
+@media (min-width: 320px) and (max-width: 1295px) {
   .home {
     top: 3em;
     .tutorial {
