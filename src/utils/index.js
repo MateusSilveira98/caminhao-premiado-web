@@ -42,7 +42,7 @@ const formValidator = (value, rule, message) => {
     {
       name: 'email',
       rule: (payload) => {
-        let regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         return !regex.test(String(payload).toLowerCase());
       },
       message
@@ -50,8 +50,16 @@ const formValidator = (value, rule, message) => {
     {
       name: 'name',
       rule: (payload) => {
-        let regex = /^[a-zA-Z ]{2,30}$/;
+        const regex = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]{2,30}$/;
         return !regex.test(String(payload));
+      },
+      message
+    },
+    {
+      name: 'date',
+      rule: (payload) => {
+        const condition = !!Date.parse(payload);
+        return !condition;
       },
       message
     },

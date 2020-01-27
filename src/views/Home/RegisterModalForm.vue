@@ -165,7 +165,6 @@
             format="DD/MM/YYYY"
             valuetype="format"
             placeholder="dd/mm/yyyy"
-            :editable="false"
             v-if="!isMobile"
           />
           <span
@@ -678,7 +677,8 @@ export default {
       lengthCondition = null,
       emailCondition = null,
       nameCondition = null,
-      cpfCondition = null
+      cpfCondition = null,
+      dateCondition = null
     ) {
       return {
         isInvalid:
@@ -686,13 +686,16 @@ export default {
           (lengthCondition && lengthCondition !== "isValid") ||
           (emailCondition && emailCondition !== "isValid") ||
           (nameCondition && nameCondition !== "isValid") ||
-          (cpfCondition && cpfCondition !== "isValid"),
+          (cpfCondition && cpfCondition !== "isValid") ||
+          (dateCondition && dateCondition !== "isValid"),
         message:
           requiredCondition === "isValid"
             ? lengthCondition === "isValid"
               ? emailCondition === "isValid"
                 ? nameCondition === "isValid"
-                  ? cpfCondition
+                  ? cpfCondition === "isValid"
+                    ? dateCondition
+                    : cpfCondition
                   : nameCondition
                 : emailCondition
               : lengthCondition
@@ -832,12 +835,13 @@ export default {
         this.userToSend.TelefoneCelular = this.user.phone.value;
         this.userToSend.UF = this.user.state.value;
         this.userToSend.Cidade = this.user.city.value;
-        await this.$store.dispatch("saveUser", this.userToSend);
+        if (this.userToSend.Idusuario > 0)
+          await this.$store.dispatch("editUser", this.userToSend);
+        else await this.$store.dispatch("createUser", this.userToSend);
         if (this.isSuccess) {
           this.showNumber = true;
         } else {
           this.handleModal();
-          alert("ERROU!!");
         }
         this.showConfirmDatas = false;
       }
@@ -937,9 +941,9 @@ export default {
       let requiredCondition = "";
       let emailCondition = "";
       let nameCondition = "";
+      let dateCondition = "";
       let propsArray = [
         { prop: "phone", message: "seu celular ou telefone." },
-        { prop: "date", message: "sua data de nascimento." },
         { prop: "state", message: "seu estado." },
         { prop: "city", message: "sua cidade." }
       ];
@@ -993,6 +997,27 @@ export default {
         nameCondition
       );
       if (this.user.name.validator.isInvalid)
+        isValidArray.push(!this.user.name.validator.isInvalid);
+
+      requiredCondition = formValidator(
+        this.user.date.value,
+        "required",
+        "informe sua data de nascimento."
+      );
+      dateCondition = formValidator(
+        this.user.date.value,
+        "date",
+        "data inválida."
+      );
+      this.user.date.validator = this.checkConditionsToValidator(
+        requiredCondition,
+        "isValid",
+        "isValid",
+        "isValid",
+        "isValid",
+        dateCondition
+      );
+      if (this.user.date.validator.isInvalid)
         isValidArray.push(!this.user.name.validator.isInvalid);
       return isValidArray.filter(value => !value).length === 0;
     },
