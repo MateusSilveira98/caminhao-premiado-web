@@ -14,17 +14,22 @@ const mutations = {
 const actions = {
   async getUserByCPF({ commit }, cpf) {
     commit('LOADING');
-    let response = await service.get(`http://localhost:3000/users?Login=${cpf}`);
-    commit('SET_SELECTEDUSER', response.data[0]);
-    commit('LOADING');
+    Promise.resolve(service.get(`http://localhost:3000/users?Login=${cpf}`)).then(response => {
+      commit('SET_SELECTEDUSER', response.data[0]);
+    }).catch(err => console.log('ERROR', JSON.stringify(err))).finally(() => commit('LOADING'));
   },
-  async saveUser({ commit }, user) {
+  async createUser({ commit }, user) {
     user.id = user.id ? user.id : Math.floor(Math.random() * 9999);
     commit('LOADING');
-    let response = await service.post(`http://localhost:3000/users`, user);
-    if (response.statusText === "Created")
+    Promise.resolve(service.post(`http://localhost:3000/users`, user)).then(response => {
       commit('SET_ISSUCCESS', true);
+    }).catch(err => console.log('ERROR', JSON.stringify(err))).finally(() => commit('LOADING'));
+  },
+  async editUser({ commit }, user) {
     commit('LOADING');
+    Promise.resolve(service.put(`http://localhost:3000/users/${user.id}`, user)).then(response => {
+      commit('SET_ISSUCCESS', true);
+    }).catch(err => console.log('ERROR', JSON.stringify(err))).finally(() => commit('LOADING'));
   }
 }
 
