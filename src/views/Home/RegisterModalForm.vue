@@ -840,10 +840,8 @@ export default {
         else await this.$store.dispatch("createUser", this.userToSend);
         if (this.isSuccess) {
           this.showNumber = true;
-        } else {
-          this.handleModal();
+          this.showConfirmDatas = false;
         }
-        this.showConfirmDatas = false;
       }
     },
     async getCitiesByState(state) {
