@@ -27,7 +27,7 @@ const callback = (commit, response) => {
 }
 const formValidator = (value, rule, message) => {
   const cpfValidator = require('validar-cpf');
-
+  const moment = require('moment');
   const rules = [
     {
       name: 'required',
@@ -58,8 +58,8 @@ const formValidator = (value, rule, message) => {
     {
       name: 'date',
       rule: (payload) => {
-        const condition = !!Date.parse(payload);
-        return !condition;
+        const date = moment(payload, 'DD/MM/YYYY');
+        return !date.isValid();
       },
       message
     },
@@ -72,8 +72,14 @@ const formValidator = (value, rule, message) => {
   let selectedRule = rules.find(r => rule === r.name);
   return selectedRule.rule(value) ? selectedRule.message : 'isValid'
 }
+const parseDate = (payload) => {
+  const split = payload.split('/');
+  const date = `${split[2]}-${split[1]}-${split[0]}`;
+  return date
+}
 module.exports = {
   localstorage,
   callback,
-  formValidator
+  formValidator,
+  parseDate
 }

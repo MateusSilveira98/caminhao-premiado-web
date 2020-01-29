@@ -159,14 +159,27 @@
             v-bind:class="{'is-danger': user.date.validator.isInvalid}"
             v-if="isMobile"
           />
-          <Datepicker
-            :inputClass="{'is-danger': user.date.validator.isInvalid, 'input': true}"
-            v-model="user.date.value"
-            format="DD/MM/YYYY"
-            valuetype="format"
-            placeholder="dd/mm/yyyy"
-            v-if="!isMobile"
-          />
+          <template v-if="!isMobile">
+            <input
+              class="input"
+              v-model="user.date.value"
+              type="text"
+              placeholder="dd/mm/yyyy"
+              @click="openCalendar = true"
+              @input="openCalendar = false"
+              v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            />
+            <Datepicker
+              :inputClass="{'d-none': true}"
+              v-model="user.date.value"
+              format="DD/MM/YYYY"
+              :open="openCalendar"
+              :appendToBody="true"
+              value-type="format"
+              @input="openCalendar = false"
+              placeholder="dd/mm/yyyy"
+            />
+          </template>
           <span
             class="has-text-danger"
             v-if="user.date.validator.isInvalid"
@@ -386,21 +399,34 @@
               <span class="has-text-danger">*</span>Data de nascimento
             </label>
             <input
+            class="input"
+            v-model="user.date.value"
+            type="date"
+            placeholder="dd/mm/yyyy"
+            v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+            v-if="isMobile"
+          />
+          <template v-if="!isMobile">
+            <input
               class="input"
               v-model="user.date.value"
-              type="date"
+              type="text"
               placeholder="dd/mm/yyyy"
+              @click="openCalendar = true"
+              @input="openCalendar = false"
               v-bind:class="{'is-danger': user.date.validator.isInvalid}"
-              v-if="isMobile"
             />
             <Datepicker
-              :inputClass="{'is-danger': user.date.validator.isInvalid, 'input': true}"
+              :inputClass="{'d-none': true}"
               v-model="user.date.value"
               format="DD/MM/YYYY"
-              valuetype="format"
+              :open="openCalendar"
+              :appendToBody="true"
+              value-type="format"
+              @input="openCalendar = false"
               placeholder="dd/mm/yyyy"
-              v-if="!isMobile"
             />
+          </template>
             <span
               class="has-text-danger"
               v-if="user.date.validator.isInvalid"
@@ -540,6 +566,7 @@ export default {
   data() {
     return {
       config,
+      openCalendar: false,
       showModal: false,
       showLoginCpf: true,
       showPassports: false,
@@ -643,6 +670,9 @@ export default {
     };
   },
   methods: {
+    inputError(event) {
+      console.log(event);
+    },
     handleModal() {
       this.showModal = !this.showModal;
       this.$store.dispatch("setSelectedMenuItem", "");
@@ -1016,7 +1046,7 @@ export default {
         dateCondition
       );
       if (this.user.date.validator.isInvalid)
-        isValidArray.push(!this.user.name.validator.isInvalid);
+        isValidArray.push(!this.user.date.validator.isInvalid);
       return isValidArray.filter(value => !value).length === 0;
     },
     redirectTo(url) {
@@ -1045,5 +1075,18 @@ export default {
 }
 .title {
   font-size: 1.5rem !important;
+}
+.mx-calendar-header-label {
+  font-size: 14px;
+  border: 1px solid;
+  padding: 0.5em 1em;
+  cursor: pointer;
+}
+.mx-datepicker {
+  position: absolute !important;
+  left: 0;
+}
+.mx-icon-calendar {
+  display: none;
 }
 </style>
