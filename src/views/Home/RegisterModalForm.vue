@@ -77,7 +77,7 @@
         <a class="button is-fullwidth is-info" @click="savePassport()">Avançar</a>
       </footer>
     </section>
-    <section class="user-form" v-if="showUserForm && !userToSend.Idusuario">
+    <section class="user-form" v-if="showUserForm && !userToSend.idUsuario">
       <header class="flex justify-between aling-items-center margin-bottom-1">
         <div class="flex align-item-center">
           <a class="margin-right-1 font-20" @click="showPassports = true; showUserForm = false;">
@@ -256,7 +256,7 @@
         <a class="button is-info is-fullwidth" @click="saveUser()">Avançar</a>
       </footer>
     </section>
-    <section class="password" v-if="showPassword && !userToSend.Idusuario">
+    <section class="password" v-if="showPassword && !userToSend.idUsuario">
       <header class="flex justify-between aling-items-center margin-bottom-1">
         <div class="flex align-item-center">
           <a class="margin-right-1 font-20" @click="showUserForm = true; showPassword = false;">
@@ -324,15 +324,27 @@
       </header>
       <div class="field">
         <label class="label">Passaporte(s)</label>
-        <div class="list-badge" v-for="item in user.numbers" :key="item.number">
-          <p>{{item.passport}}</p>
-          <span
-            class="has-text-danger"
-            @click="removePassportOnListBadge(item)"
-            v-if="user.passports.length > 1"
-          >
-            <i class="fa fa-trash"></i>
-          </span>
+        <div class="field has-addons" v-for="passport in user.passports" :key="passport.id">
+          <div class="control is-expanded">
+            <TheMask
+              class="input"
+              v-model="passport.value"
+              type="tel"
+              :mask="['####.####.####.####']"
+              placeholder="0000.0000.0000.0000"
+              maxlength="20"
+              v-bind:class="{'is-danger': passport.validator.isInvalid }"
+            />
+            <span
+              class="has-text-danger"
+              v-if="passport.validator.isInvalid"
+            >{{passport.validator.message}}</span>
+          </div>
+          <p class="control" v-if="user.passports.length > 1 || passport.value">
+            <a class="button is-danger" @click="removeInputField(passport)">
+              <i class="fa fa-trash"></i>
+            </a>
+          </p>
         </div>
       </div>
       <div class="field">
@@ -354,7 +366,7 @@
           >{{user.name.validator.message}}</span>
         </p>
       </div>
-      <template v-if="!userToSend.Idusuario">
+      <template v-if="!userToSend.idUsuario">
         <div class="field">
           <p class="control">
             <label class="label">
@@ -399,34 +411,34 @@
               <span class="has-text-danger">*</span>Data de nascimento
             </label>
             <input
-            class="input"
-            v-model="user.date.value"
-            type="date"
-            placeholder="dd/mm/yyyy"
-            v-bind:class="{'is-danger': user.date.validator.isInvalid}"
-            v-if="isMobile"
-          />
-          <template v-if="!isMobile">
-            <input
               class="input"
               v-model="user.date.value"
-              type="text"
+              type="date"
               placeholder="dd/mm/yyyy"
-              @click="openCalendar = true"
-              @input="openCalendar = false"
               v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+              v-if="isMobile"
             />
-            <Datepicker
-              :inputClass="{'d-none': true}"
-              v-model="user.date.value"
-              format="DD/MM/YYYY"
-              :open="openCalendar"
-              :appendToBody="true"
-              value-type="format"
-              @input="openCalendar = false"
-              placeholder="dd/mm/yyyy"
-            />
-          </template>
+            <template v-if="!isMobile">
+              <input
+                class="input"
+                v-model="user.date.value"
+                type="text"
+                placeholder="dd/mm/yyyy"
+                @click="openCalendar = true"
+                @input="openCalendar = false"
+                v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+              />
+              <Datepicker
+                :inputClass="{'d-none': true}"
+                v-model="user.date.value"
+                format="DD/MM/YYYY"
+                :open="openCalendar"
+                :appendToBody="true"
+                value-type="format"
+                @input="openCalendar = false"
+                placeholder="dd/mm/yyyy"
+              />
+            </template>
             <span
               class="has-text-danger"
               v-if="user.date.validator.isInvalid"
@@ -517,8 +529,8 @@
       <div class="field">
         <strong>Veja seu(s) número(s) da sorte.</strong>
       </div>
-      <div class="field" v-for="item in user.numbers" :key="item.number">
-        <strong>{{item.number}}</strong>
+      <div class="field" v-for="item in userToSend.vouchers" :key="item.numeroSerie">
+        <strong>{{item.numeroSerie}}</strong>
       </div>
       <footer>
         <a
@@ -577,20 +589,7 @@ export default {
       isMobile: false,
       states: [],
       cities: [],
-      userToSend: {
-        Idusuario: 0,
-        Nome: "",
-        Email: "",
-        Login: "",
-        Senha: "",
-        sexo: "O",
-        DataNascimento: "",
-        TelefoneCelular: "",
-        UF: "",
-        Cidade: "",
-        Vouchers: [],
-        Idsistema: 1383
-      },
+      userToSend: {},
       user: {
         passports: [
           {
@@ -670,9 +669,6 @@ export default {
     };
   },
   methods: {
-    inputError(event) {
-      console.log(event);
-    },
     handleModal() {
       this.showModal = !this.showModal;
       this.$store.dispatch("setSelectedMenuItem", "");
@@ -783,24 +779,10 @@ export default {
         this.user.passports[index].validator = validator;
       }
       if (isValidArray.filter(value => !value).length === 0) {
-        this.user.numbers = [];
-        for (let index = 0; index < this.user.passports.length; index++) {
-          this.user.numbers.push({
-            number: Math.floor(Math.random() * 1000),
-            passport: this.user.passports[index].value
-          });
-        }
-
-        if (!this.userToSend.Idusuario) {
+        if (!this.userToSend.idUsuario) {
           this.showUserForm = true;
         } else {
-          this.user.name.value = this.userToSend.Nome;
-          this.user.password.value = this.userToSend.Senha;
-          this.user.gender = this.userToSend.sexo;
-          this.user.date.value = this.userToSend.DataNascimento;
-          this.user.phone.value = this.userToSend.TelefoneCelular;
-          this.user.state.value = this.userToSend.UF;
-          this.user.city.value = this.userToSend.Cidade;
+          this.user.name.value = this.userToSend.nome;
           this.showConfirmDatas = true;
         }
         this.showPassports = false;
@@ -856,22 +838,24 @@ export default {
       }
     },
     async confirm() {
-      if (this.validateUserForm()) {
-        this.userToSend.Vouchers = this.user.passports.map(item => item.value);
-        this.userToSend.Nome = this.user.name.value;
-        this.userToSend.Senha = this.user.password.value;
+      this.userToSend.vouchers = this.user.passports.map(item => item.value);
+      if (this.userToSend.idUsuario > 0)
+        await this.$store.dispatch("editUser", this.userToSend);
+      else if (this.validateUserForm()) {
+        this.userToSend.nome = this.user.name.value;
+        this.userToSend.login = this.userToSend.cpf = this.user.cpf.value;
+        this.userToSend.email = this.user.email.value;
+        this.userToSend.senha = this.user.password.value;
         this.userToSend.sexo = this.user.gender;
-        this.userToSend.DataNascimento = this.user.date.value;
-        this.userToSend.TelefoneCelular = this.user.phone.value;
-        this.userToSend.UF = this.user.state.value;
-        this.userToSend.Cidade = this.user.city.value;
-        if (this.userToSend.Idusuario > 0)
-          await this.$store.dispatch("editUser", this.userToSend);
-        else await this.$store.dispatch("createUser", this.userToSend);
-        if (this.isSuccess) {
-          this.showNumber = true;
-          this.showConfirmDatas = false;
-        }
+        this.userToSend.dataNascimento = this.user.date.value;
+        this.userToSend.telefoneCelular = this.user.phone.value;
+        this.userToSend.uf = this.user.state.value.sigla;
+        this.userToSend.cidade = this.user.city.value;
+        await this.$store.dispatch("createUser", this.userToSend);
+      }
+      if (this.isSuccess) {
+        this.showNumber = true;
+        this.showConfirmDatas = false;
       }
     },
     async getCitiesByState(state) {
@@ -975,7 +959,7 @@ export default {
         { prop: "state", message: "seu estado." },
         { prop: "city", message: "sua cidade." }
       ];
-      if (!this.userToSend.Idusuario) {
+      if (!this.userToSend.idUsuario) {
         Object.keys(this.user).forEach(key => {
           let { value, validator } = this.user[key];
           let valuePropName = propsArray.find(p => p.prop === key);

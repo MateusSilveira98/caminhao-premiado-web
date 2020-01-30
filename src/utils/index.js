@@ -13,18 +13,6 @@ const localstorage = {
     window.localStorage.clear();
   }
 }
-const callback = (commit, response) => {
-  if (response.type == 'success') {
-    commit('LOADING');
-    commit('SUCCESS_MESSAGE', { response });
-    commit('PUSH_NOTIFICATION');
-  } else {
-    commit('LOADING');
-    console.log('error', response)
-    commit('FAIL_MESSAGE', { response });
-    commit('PUSH_NOTIFICATION');
-  }
-}
 const formValidator = (value, rule, message) => {
   const cpfValidator = require('validar-cpf');
   const moment = require('moment');
@@ -50,8 +38,10 @@ const formValidator = (value, rule, message) => {
     {
       name: 'name',
       rule: (payload) => {
-        const regex = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]{2,30}$/;
-        return !regex.test(String(payload));
+        // const regex = /^[A-Za-z\u00C0-\u00FFçÇ]{2,30}$/;
+        let string = payload.split(' ');
+        let charactersArray = string.filter(item => item.length >= 2);
+        return !(string.length > 1 && charactersArray.length > 1);
       },
       message
     },
@@ -72,14 +62,7 @@ const formValidator = (value, rule, message) => {
   let selectedRule = rules.find(r => rule === r.name);
   return selectedRule.rule(value) ? selectedRule.message : 'isValid'
 }
-const parseDate = (payload) => {
-  const split = payload.split('/');
-  const date = `${split[2]}-${split[1]}-${split[0]}`;
-  return date
-}
 module.exports = {
   localstorage,
-  callback,
-  formValidator,
-  parseDate
+  formValidator
 }
