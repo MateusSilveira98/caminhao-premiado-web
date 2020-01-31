@@ -316,9 +316,22 @@
     <section class="confirm-datas" v-if="showConfirmDatas">
       <header class="flex justify-between aling-items-center margin-bottom-1">
         <div class="flex align-item-center">
-          <a class="margin-right-1 font-20" @click="showPassword = true; showConfirmDatas = false;">
-            <i class="fa fa-arrow-left"></i>
-          </a>
+          <span v-if="!userToSend.idUsuario">
+            <a
+              class="margin-right-1 font-20"
+              @click="showPassword = true; showConfirmDatas = false;"
+            >
+              <i class="fa fa-arrow-left"></i>
+            </a>
+          </span>
+          <span v-if="userToSend.idUsuario">
+            <a
+              class="margin-right-1 font-20"
+              @click="showPassports = true; showConfirmDatas = false;"
+            >
+              <i class="fa fa-arrow-left"></i>
+            </a>
+          </span>
           <span class="title">Confime seus dados</span>
         </div>
         <a class="font-25" @click="handleModal()">
@@ -522,8 +535,13 @@
       </footer>
     </section>
     <section class="random-number" v-if="showNumber">
-      <header class="margin-bottom-1">
-        <span class="title">Parabéns</span>
+      <header class="flex justify-between aling-items-center margin-bottom-1">
+        <div class="flex align-item-center">
+          <span class="title">Parabéns</span>
+        </div>
+        <a class="font-25" @click="handleModal()">
+          <i class="fa fa-times"></i>
+        </a>
       </header>
       <div class="field">
         <strong>Sua participação no sorteio está confirmada e seu acesso a plataforma Cresça Play está liberado :)</strong>
