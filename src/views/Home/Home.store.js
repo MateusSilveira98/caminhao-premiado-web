@@ -4,7 +4,8 @@ import moment from 'moment';
 const state = {
   selectedUser: {},
   isSuccess: false,
-  invalidVouchers: []
+  invalidVouchers: [],
+  invalidEmail: {}
 }
 const mutations = {
   'SET_SELECTEDUSER'(state, result) {
@@ -15,6 +16,9 @@ const mutations = {
   },
   'SET_INVALID_VOUCHERS'(state, result) {
     state.invalidVouchers = result;
+  },
+  'SET_INVALID_EMAIL'(state, result) {
+    state.invalidEmail = result;
   }
 }
 const actions = {
@@ -38,13 +42,18 @@ const actions = {
       commit('SET_SELECTEDUSER', user)
       commit('SET_ISSUCCESS', true);
     }).catch(err => {
-      if (err.response.data.Message) {
-        let response = JSON.parse(err.response.data.Message);
-        if (response.length > 0) {
+      if (err.response.data) {
+        let response = JSON.parse(err.response.data);
+        console.log(response)
+        if (!response.email) {
           commit('SET_INVALID_VOUCHERS', response)
+        } else {
+          commit('SET_INVALID_EMAIL', response)
         }
       }
-      commit('PUSH_NOTIFICATION', { message: 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
+      else {
+        commit('PUSH_NOTIFICATION', { message: 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
+      }
       commit('SET_ISSUCCESS', false);
     }).finally(() => commit('LOADING'));
   },
@@ -57,7 +66,7 @@ const actions = {
         commit('SET_SELECTEDUSER', user)
         commit('SET_ISSUCCESS', true);
       }).catch((err) => {
-        let response = JSON.parse(err.response.data.Message);
+        let response = JSON.parse(err.response.data);
         if (response.length > 0) {
           commit('SET_INVALID_VOUCHERS', response)
         } else {

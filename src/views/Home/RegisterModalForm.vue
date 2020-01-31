@@ -588,7 +588,8 @@ export default {
       selectedUser: state => state.Home.selectedUser,
       menuItem: state => state.menuItem,
       isSuccess: state => state.Home.isSuccess,
-      invalidVouchers: state => state.Home.invalidVouchers
+      invalidVouchers: state => state.Home.invalidVouchers,
+      invalidEmail: state => state.Home.invalidEmail
     })
   },
   watch: {
@@ -605,6 +606,10 @@ export default {
         );
         passport.validator.message = "passaporte inválido.";
       });
+    },
+    invalidEmail(value) {
+      this.user.email.validator.isInvalid = value.email == this.user.email.value;
+      this.user.email.validator.message = value.message.toLowerCase();
     }
   },
   data() {
