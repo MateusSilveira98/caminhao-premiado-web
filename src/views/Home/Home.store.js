@@ -1,8 +1,10 @@
 import service from '@/store/services';
 import config from '@/config.json';
+import moment from 'moment';
 const state = {
   selectedUser: {},
-  isSuccess: false
+  isSuccess: false,
+  invalidVouchers: []
 }
 const mutations = {
   'SET_SELECTEDUSER'(state, result) {
@@ -10,6 +12,9 @@ const mutations = {
   },
   'SET_ISSUCCESS'(state, result) {
     state.isSuccess = result;
+  },
+  'SET_INVALID_VOUCHERS'(state, result) {
+    state.invalidVouchers = result;
   }
 }
 const actions = {
@@ -20,21 +25,26 @@ const actions = {
         commit('SET_SELECTEDUSER', response.data);
       })
       .catch(err => {
-        commit('PUSH_NOTIFICATION', { message: JSON.parse(JSON.stringify(err)).Message || JSON.parse(JSON.stringify(err)).message, messageClass: 'danger' })
+        commit('PUSH_NOTIFICATION', { message: err.response.data.message || 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
         commit('SET_ISSUCCESS', false);
       }).finally(() => commit('LOADING'));
   },
   async createUser({ commit }, user) {
     user.Idsistema = 1383;
+    user.dataNascimento = moment(user.dataNascimento, 'DD/MM/YYYY').format('YYYY-MM-DD');
     commit('LOADING');
     return Promise.resolve(service.post(`${config.API_URL}/autocadastro`, user)).then(response => {
-      user.vouchers = response.data;
+      user.vouchers = response.data; 1
       commit('SET_SELECTEDUSER', user)
       commit('SET_ISSUCCESS', true);
     }).catch(err => {
-      console.log('ERRO NORMAL', err)
-      console.log('ERRO PARSE', JSON.parse(JSON.stringify(err)))
-      commit('PUSH_NOTIFICATION', { message: JSON.parse(JSON.stringify(err)).Message || JSON.parse(JSON.stringify(err)).message, messageClass: 'danger' })
+      if (err.response.data.Message) {
+        let response = JSON.parse(err.response.data.Message);
+        if (response.length > 0) {
+          commit('SET_INVALID_VOUCHERS', response)
+        }
+      }
+      commit('PUSH_NOTIFICATION', { message: 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
       commit('SET_ISSUCCESS', false);
     }).finally(() => commit('LOADING'));
   },
@@ -46,11 +56,13 @@ const actions = {
         user.vouchers = response[0].data;
         commit('SET_SELECTEDUSER', user)
         commit('SET_ISSUCCESS', true);
-      }).catch(err => {
-        console.log('ERRO NORMAL', err)
-        console.log('ERRO NORMAL prop', err.Message)
-        console.log('ERRO PARSE', JSON.parse(JSON.stringify(err)))
-        commit('PUSH_NOTIFICATION', { message: JSON.parse(JSON.stringify(err)).Message || JSON.parse(JSON.stringify(err)).message, messageClass: 'danger' })
+      }).catch((err) => {
+        let response = JSON.parse(err.response.data.Message);
+        if (response.length > 0) {
+          commit('SET_INVALID_VOUCHERS', response)
+        } else {
+          commit('PUSH_NOTIFICATION', { message: 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
+        }
         commit('SET_ISSUCCESS', false);
       }).finally(() => commit('LOADING'));
   }

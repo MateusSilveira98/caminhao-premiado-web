@@ -2,7 +2,6 @@
 node_modules
 package-lock.json*
 /dist
-
 # local env files
 .env.local
 .env.*.local
@@ -13,6 +12,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # Editor directories and files
+*.rar
+*.zip
 .idea
 .vscode
 *.suo

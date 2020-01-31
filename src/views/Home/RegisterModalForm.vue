@@ -171,6 +171,8 @@
             />
             <Datepicker
               :inputClass="{'d-none': true}"
+              :disabledDate="disableDate"
+              :defaultValue="moment().subtract(18, 'years')"
               v-model="user.date.value"
               format="DD/MM/YYYY"
               :open="openCalendar"
@@ -180,6 +182,7 @@
               placeholder="dd/mm/yyyy"
             />
           </template>
+
           <span
             class="has-text-danger"
             v-if="user.date.validator.isInvalid"
@@ -430,6 +433,8 @@
               />
               <Datepicker
                 :inputClass="{'d-none': true}"
+                :disabledDate="disableDate"
+                :defaultValue="moment().subtract(18, 'years')"
                 v-model="user.date.value"
                 format="DD/MM/YYYY"
                 :open="openCalendar"
@@ -551,7 +556,7 @@ import { formValidator } from "@/utils";
 import { TheMask } from "vue-the-mask";
 import Datepicker from "vue2-datepicker";
 import config from "@/config.json";
-
+import moment from "moment";
 let mockId = 1;
 
 export default {
@@ -564,7 +569,8 @@ export default {
     ...mapState({
       selectedUser: state => state.Home.selectedUser,
       menuItem: state => state.menuItem,
-      isSuccess: state => state.Home.isSuccess
+      isSuccess: state => state.Home.isSuccess,
+      invalidVouchers: state => state.Home.invalidVouchers
     })
   },
   watch: {
@@ -573,10 +579,19 @@ export default {
     },
     selectedUser(value) {
       this.userToSend = value;
+    },
+    invalidVouchers(value) {
+      this.user.passports.forEach(passport => {
+        passport.validator.isInvalid = !!value.find(
+          invalid => invalid.voucher == passport.value
+        );
+        passport.validator.message = "passaporte inválido.";
+      });
     }
   },
   data() {
     return {
+      moment,
       config,
       openCalendar: false,
       showModal: false,
@@ -631,7 +646,7 @@ export default {
           }
         },
         date: {
-          value: null,
+          value: moment().subtract(18, "years"),
           validator: {
             isInvalid: false,
             message: ""
@@ -704,7 +719,8 @@ export default {
       emailCondition = null,
       nameCondition = null,
       cpfCondition = null,
-      dateCondition = null
+      dateCondition = null,
+      adulthoodCondition = null
     ) {
       return {
         isInvalid:
@@ -713,14 +729,17 @@ export default {
           (emailCondition && emailCondition !== "isValid") ||
           (nameCondition && nameCondition !== "isValid") ||
           (cpfCondition && cpfCondition !== "isValid") ||
-          (dateCondition && dateCondition !== "isValid"),
+          (dateCondition && dateCondition !== "isValid") ||
+          (adulthoodCondition && adulthoodCondition !== "isValid"),
         message:
           requiredCondition === "isValid"
             ? lengthCondition === "isValid"
               ? emailCondition === "isValid"
                 ? nameCondition === "isValid"
                   ? cpfCondition === "isValid"
-                    ? dateCondition
+                    ? dateCondition === "isValid"
+                      ? adulthoodCondition
+                      : dateCondition
                     : cpfCondition
                   : nameCondition
                 : emailCondition
@@ -954,6 +973,7 @@ export default {
       let emailCondition = "";
       let nameCondition = "";
       let dateCondition = "";
+      let adulthoodCondition = "";
       let propsArray = [
         { prop: "phone", message: "seu celular ou telefone." },
         { prop: "state", message: "seu estado." },
@@ -989,8 +1009,35 @@ export default {
           "isValid",
           emailCondition
         );
-        if (this.user.email.validator.isInvalid)
+        if (this.user.email.validator.isInvalid) {
           isValidArray.push(!this.user.email.validator.isInvalid);
+        }
+        requiredCondition = formValidator(
+          this.user.date.value,
+          "required",
+          "informe sua data de nascimento."
+        );
+        dateCondition = formValidator(
+          this.user.date.value,
+          "date",
+          "data de nascimento inválida."
+        );
+        adulthoodCondition = formValidator(
+          this.user.date.value,
+          "adulthood",
+          "você precisa ter mais de 18 anos para criar seu cadastro."
+        );
+        this.user.date.validator = this.checkConditionsToValidator(
+          requiredCondition,
+          "isValid",
+          "isValid",
+          "isValid",
+          "isValid",
+          dateCondition,
+          adulthoodCondition
+        );
+        if (this.user.date.validator.isInvalid)
+          isValidArray.push(!this.user.date.validator.isInvalid);
       }
       requiredCondition = formValidator(
         this.user.name.value,
@@ -1008,30 +1055,14 @@ export default {
         "isValid",
         nameCondition
       );
-      if (this.user.name.validator.isInvalid)
+      if (this.user.name.validator.isInvalid) {
         isValidArray.push(!this.user.name.validator.isInvalid);
+      }
 
-      requiredCondition = formValidator(
-        this.user.date.value,
-        "required",
-        "informe sua data de nascimento."
-      );
-      dateCondition = formValidator(
-        this.user.date.value,
-        "date",
-        "data inválida."
-      );
-      this.user.date.validator = this.checkConditionsToValidator(
-        requiredCondition,
-        "isValid",
-        "isValid",
-        "isValid",
-        "isValid",
-        dateCondition
-      );
-      if (this.user.date.validator.isInvalid)
-        isValidArray.push(!this.user.date.validator.isInvalid);
       return isValidArray.filter(value => !value).length === 0;
+    },
+    disableDate(date) {
+      return date > moment().subtract(18, "years");
     },
     redirectTo(url) {
       window.location.href = url;

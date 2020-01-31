@@ -38,10 +38,11 @@ const formValidator = (value, rule, message) => {
     {
       name: 'name',
       rule: (payload) => {
-        // const regex = /^[A-Za-z\u00C0-\u00FFçÇ]{2,30}$/;
-        let string = payload.split(' ');
-        let charactersArray = string.filter(item => item.length >= 2);
-        return !(string.length > 1 && charactersArray.length > 1);
+        if (payload) {
+          let string = payload.split(' ');
+          let charactersArray = string.filter(item => item.length >= 2);
+          return !(string.length > 1 && charactersArray.length > 1);
+        } else return false
       },
       message
     },
@@ -50,6 +51,14 @@ const formValidator = (value, rule, message) => {
       rule: (payload) => {
         const date = moment(payload, 'DD/MM/YYYY');
         return !date.isValid();
+      },
+      message
+    },
+    {
+      name: 'adulthood',
+      rule: (payload) => {
+        const date = moment(payload, 'DD/MM/YYYY');
+        return date > moment().subtract(18, 'years');
       },
       message
     },
