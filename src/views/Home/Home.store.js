@@ -1,5 +1,4 @@
 import service from '@/store/services';
-import config from '@/config.json';
 import moment from 'moment';
 const state = {
   selectedUser: {},
@@ -24,7 +23,7 @@ const mutations = {
 const actions = {
   async getUserByCPF({ commit }, cpf) {
     commit('LOADING');
-    return Promise.resolve(service.get(`${config.API_URL}obterusuario?cpf=${cpf}`))
+    return Promise.resolve(service.get(`${process.env.VUE_APP_API_URL}obterusuario?cpf=${cpf}`))
       .then(response => {
         commit('SET_SELECTEDUSER', response.data);
       })
@@ -37,7 +36,7 @@ const actions = {
     user.Idsistema = 1383;
     user.dataNascimento = moment(user.dataNascimento, 'DD/MM/YYYY').format('YYYY-MM-DD');
     commit('LOADING');
-    return Promise.resolve(service.post(`${config.API_URL}/autocadastro`, user)).then(response => {
+    return Promise.resolve(service.post(`${process.env.VUE_APP_API_URL}/autocadastro`, user)).then(response => {
       user.vouchers = response.data; 1
       commit('SET_SELECTEDUSER', user)
       commit('SET_ISSUCCESS', true);
@@ -60,7 +59,7 @@ const actions = {
   async editUser({ commit }, user) {
     commit('LOADING');
     user.Idsistema = 1383;
-    return Promise.all([service.post(`${config.API_URL}/inserirvoucher`, user)])
+    return Promise.all([service.post(`${process.env.VUE_APP_API_URL}/inserirvoucher`, user)])
       .then(response => {
         user.vouchers = response[0].data;
         commit('SET_SELECTEDUSER', user)

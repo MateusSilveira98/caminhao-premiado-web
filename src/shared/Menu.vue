@@ -51,11 +51,11 @@
           <div class="button-labeled">
             <label>Acesse o</label>
             <a
-              :href="config.CRESCA_URL"
+              :href="crescaURL"
               class="button login-button"
               @click="isBurgerActive = !isBurgerActive"
             >
-              <img src="@/assets/images/botao_crescaplay.png" alt />
+              <img src="@/assets/images/botao_crescaplay.png" />
             </a>
           </div>
         </div>
@@ -65,12 +65,10 @@
 </template>
 
 <script>
-import config from "@/config.json";
-
 export default {
   data() {
     return {
-      config,
+      crescaURL: process.env.VUE_APP_CRESCA_URL,
       isBurgerActive: false
     };
   },

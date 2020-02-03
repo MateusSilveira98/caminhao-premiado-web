@@ -15,7 +15,7 @@
 <script>
 import Loading from "@/components/Loading";
 import Notification from "@/components/Notification";
-import Menu from "@/components/Menu.vue";
+import Menu from "@/shared/Menu.vue";
 import { mapState } from "vuex";
 export default {
   components: {

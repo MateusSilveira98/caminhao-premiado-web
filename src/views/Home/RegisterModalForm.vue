@@ -558,7 +558,7 @@
       <footer>
         <a
           class="button is-info is-fullwidth"
-          @click="redirectTo(config.CRESCA_URL)"
+          @click="redirectTo(crescaURL)"
         >Acesse o Cresça Play</a>
       </footer>
     </section>
@@ -573,7 +573,6 @@ import services from "@/store/services";
 import { formValidator } from "@/utils";
 import { TheMask } from "vue-the-mask";
 import Datepicker from "vue2-datepicker";
-import config from "@/config.json";
 import moment from "moment";
 let mockId = 1;
 
@@ -615,7 +614,7 @@ export default {
   data() {
     return {
       moment,
-      config,
+      crescaURL: process.env.VUE_APP_CRESCA_URL,
       openCalendar: false,
       showModal: false,
       showLoginCpf: true,
@@ -902,7 +901,7 @@ export default {
     },
     async getCitiesByState(state) {
       let response = await services.get(
-        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state.id}/municipios`
+        `${process.env.VUE_APP_IBGE_API_URL}estados/${state.id}/municipios`
       );
       this.cities = _.orderBy(response.data, "nome");
     },
@@ -1093,7 +1092,7 @@ export default {
   },
   async mounted() {
     let response = await services.get(
-      "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+      `${process.env.VUE_APP_IBGE_API_URL}estados`
     );
     this.states = _.orderBy(response.data, "nome");
     this.isMobile = screen.width < 1300;

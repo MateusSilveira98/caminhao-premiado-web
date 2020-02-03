@@ -37,7 +37,7 @@
         Aqui você é o protagonista. Dê um play no seu conhecimento!
       </p>
       <p class="font-25 has-text-centered margin-bottom-1">
-        <a :href="config.CRESCA_URL" class="button">Acesse</a>
+        <a :href="crescaURL" class="button">Acesse</a>
       </p>
       <div class="informationsSteps">
         <Step
@@ -84,7 +84,6 @@
 import Step from "./Step.vue";
 import RegisterModalForm from "./RegisterModalForm.vue";
 import { mapState } from "vuex";
-import config from "@/config.json";
 let mockId = 1;
 export default {
   components: {
@@ -101,7 +100,7 @@ export default {
   },
   data() {
     return {
-      config,
+      crescaURL: process.env.VUE_APP_CRESCA_URL,
       tutorialSteps: [
         {
           id: mockId++,
