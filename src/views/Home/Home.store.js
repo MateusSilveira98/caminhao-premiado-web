@@ -29,7 +29,7 @@ const actions = {
         commit('SET_SELECTEDUSER', response.data);
       })
       .catch(err => {
-        commit('PUSH_NOTIFICATION', { message: err.response.data.message || 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
+        commit('PUSH_NOTIFICATION', { message: err.response.data.message || 'OPS! Um erro inesperado aconteceu :(', messageClass: 'danger' })
         commit('SET_ISSUCCESS', false);
       }).finally(() => commit('LOADING'));
   },
@@ -52,7 +52,7 @@ const actions = {
         }
       }
       else {
-        commit('PUSH_NOTIFICATION', { message: 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
+        commit('PUSH_NOTIFICATION', { message: 'OPS! Um erro inesperado aconteceu :(', messageClass: 'danger' })
       }
       commit('SET_ISSUCCESS', false);
     }).finally(() => commit('LOADING'));
@@ -70,7 +70,7 @@ const actions = {
         if (response.length > 0) {
           commit('SET_INVALID_VOUCHERS', response)
         } else {
-          commit('PUSH_NOTIFICATION', { message: 'OPS! Algo de errado não está certo :(', messageClass: 'danger' })
+          commit('PUSH_NOTIFICATION', { message: 'OPS! Um erro inesperado aconteceu :(', messageClass: 'danger' })
         }
         commit('SET_ISSUCCESS', false);
       }).finally(() => commit('LOADING'));
