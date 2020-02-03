@@ -160,15 +160,17 @@
             v-if="isMobile"
           />
           <template v-if="!isMobile">
-            <input
-              class="input"
-              v-model="user.date.value"
-              type="text"
-              placeholder="dd/mm/yyyy"
-              @click="openCalendar = true"
-              @input="openCalendar = false"
-              v-bind:class="{'is-danger': user.date.validator.isInvalid}"
-            />
+            <label @click="openCalendar = !openCalendar;">
+              <TheMask
+                class="input"
+                v-model="user.date.value"
+                type="text"
+                placeholder="dd/mm/yyyy"
+                :mask="['##/##/####']"
+                @input="openCalendar = false"
+                v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+              />
+            </label>
             <Datepicker
               :inputClass="{'d-none': true}"
               :disabledDate="disableDate"
@@ -435,15 +437,17 @@
               v-if="isMobile"
             />
             <template v-if="!isMobile">
-              <input
-                class="input"
-                v-model="user.date.value"
-                type="text"
-                placeholder="dd/mm/yyyy"
-                @click="openCalendar = true"
-                @input="openCalendar = false"
-                v-bind:class="{'is-danger': user.date.validator.isInvalid}"
-              />
+              <label @click="openCalendar = !openCalendar;">
+                <TheMask
+                  class="input"
+                  v-model="user.date.value"
+                  type="text"
+                  placeholder="dd/mm/yyyy"
+                  :mask="['##/##/####']"
+                  @input="openCalendar = false"
+                  v-bind:class="{'is-danger': user.date.validator.isInvalid}"
+                />
+              </label>
               <Datepicker
                 :inputClass="{'d-none': true}"
                 :disabledDate="disableDate"
@@ -556,10 +560,7 @@
         <strong>{{item.numeroSerie}}</strong>
       </div>
       <footer>
-        <a
-          class="button is-info is-fullwidth"
-          @click="redirectTo(crescaURL)"
-        >Acesse o Cresça Play</a>
+        <a class="button is-info is-fullwidth" @click="redirectTo(crescaURL)">Acesse o Cresça Play</a>
       </footer>
     </section>
   </Modal>
@@ -574,7 +575,7 @@ import { formValidator } from "@/utils";
 import { TheMask } from "vue-the-mask";
 import Datepicker from "vue2-datepicker";
 import moment from "moment";
-import config from '@/config.json';
+import config from "@/config.json";
 let mockId = 1;
 
 export default {
@@ -609,7 +610,8 @@ export default {
       });
     },
     invalidEmail(value) {
-      this.user.email.validator.isInvalid = value.email == this.user.email.value;
+      this.user.email.validator.isInvalid =
+        value.email == this.user.email.value;
       this.user.email.validator.message = value.message.toLowerCase();
     }
   },
@@ -707,6 +709,9 @@ export default {
     };
   },
   methods: {
+    alert() {
+      alert("FOI");
+    },
     handleModal() {
       this.showModal = !this.showModal;
       this.$store.dispatch("setSelectedMenuItem", "");
@@ -1092,9 +1097,7 @@ export default {
     }
   },
   async mounted() {
-    let response = await services.get(
-      `${config.IBGE_API_URL}estados`
-    );
+    let response = await services.get(`${config.IBGE_API_URL}estados`);
     this.states = _.orderBy(response.data, "nome");
     this.isMobile = screen.width < 1300;
   }
