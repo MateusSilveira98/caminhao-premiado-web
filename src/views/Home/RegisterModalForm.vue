@@ -574,6 +574,7 @@ import { formValidator } from "@/utils";
 import { TheMask } from "vue-the-mask";
 import Datepicker from "vue2-datepicker";
 import moment from "moment";
+import config from '@/config.json';
 let mockId = 1;
 
 export default {
@@ -584,8 +585,9 @@ export default {
   },
   computed: {
     ...mapState({
-      selectedUser: state => state.Home.selectedUser,
       menuItem: state => state.menuItem,
+      crescaURL: state => state.crescaURL,
+      selectedUser: state => state.Home.selectedUser,
       isSuccess: state => state.Home.isSuccess,
       invalidVouchers: state => state.Home.invalidVouchers,
       invalidEmail: state => state.Home.invalidEmail
@@ -614,7 +616,6 @@ export default {
   data() {
     return {
       moment,
-      crescaURL: process.env.VUE_APP_CRESCA_URL,
       openCalendar: false,
       showModal: false,
       showLoginCpf: true,
@@ -901,7 +902,7 @@ export default {
     },
     async getCitiesByState(state) {
       let response = await services.get(
-        `${process.env.VUE_APP_IBGE_API_URL}estados/${state.id}/municipios`
+        `${config.IBGE_API_URL}estados/${state.id}/municipios`
       );
       this.cities = _.orderBy(response.data, "nome");
     },
@@ -1092,7 +1093,7 @@ export default {
   },
   async mounted() {
     let response = await services.get(
-      `${process.env.VUE_APP_IBGE_API_URL}estados`
+      `${config.IBGE_API_URL}estados`
     );
     this.states = _.orderBy(response.data, "nome");
     this.isMobile = screen.width < 1300;

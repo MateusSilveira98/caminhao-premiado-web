@@ -65,12 +65,16 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
-      crescaURL: process.env.VUE_APP_CRESCA_URL,
       isBurgerActive: false
     };
+  },
+  computed: {
+    ...mapState(["crescaURL"])
   },
   methods: {
     selectMenu(item) {

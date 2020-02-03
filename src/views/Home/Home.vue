@@ -91,7 +91,7 @@ export default {
     RegisterModalForm
   },
   computed: {
-    ...mapState(["menuItem"])
+    ...mapState(["menuItem", "crescaURL"])
   },
   watch: {
     menuItem(value) {
@@ -100,7 +100,6 @@ export default {
   },
   data() {
     return {
-      crescaURL: process.env.VUE_APP_CRESCA_URL,
       tutorialSteps: [
         {
           id: mockId++,
